@@ -1,6 +1,7 @@
 package org.example.edutrackerteach.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,10 +21,20 @@ public class Course {
     @Column(length = 1000)
     private String goal;
     @ManyToOne
+    @JoinColumn(name = "professor_id")
     @JsonBackReference
-    private Teach teach;
+    private Professor professor;
+    @ManyToMany
+    @JoinTable(
+            name = "course_student",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
+    @JsonManagedReference
+    private List<Student> students;
     @OneToMany
     private List<Literature> literatures;
     @OneToMany
     private List<Task> tasks;
+
 }

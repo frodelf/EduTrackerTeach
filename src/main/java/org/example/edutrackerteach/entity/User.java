@@ -24,7 +24,4 @@ public abstract class User {
     private String email;
     @Column(length = 100)
     private String telegram;
-    @OneToMany(mappedBy = "user")
-    @JsonManagedReference
-    private List<Course> courses;
 }
