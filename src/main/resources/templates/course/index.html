@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"
+      class="light-style layout-navbar-fixed layout-menu-fixed"
+      layout:decorate="~{blocks/layout.html}" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Курси</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="d-flex justify-content-between mt-2">
+        <h4>Курси</h4>
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="d-flex align-items-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/}" data-translate="main">Головна</a></li>
+                <li class="breadcrumb-item active" aria-current="page" data-translate="buyer">Курси</li>
+            </ol>
+        </nav>
+    </div>
+    <hr style="margin-top: 0"/>
+
+
+</section>
+</body>
+</html>
