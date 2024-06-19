@@ -26,19 +26,17 @@
     <link rel="stylesheet" th:href="@{/assets/vendor/libs/node-waves/node-waves.css}">
     <link rel="stylesheet" th:href="@{/assets/vendor/libs/typeahead-js/typeahead.css}">
     <link rel="stylesheet" th:href="@{/assets/vendor/libs/select2/select2.css}">
-    <link rel="stylesheet" th:href="@{/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css}">
     <link rel="stylesheet" th:href="@{/assets/vendor/libs/animate-css/animate.css}">
     <link rel="stylesheet" th:href="@{/assets/vendor/libs/sweetalert2/sweetalert2.css}">
     <script th:src="@{/assets/vendor/js/helpers.js}"></script>
-    <script th:src="@{/assets/vendor/js/template-customizer.js}"></script>
     <script th:src="@{/assets/js/config.js}"></script>
 </head>
 <body>
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
-        <aside layout:insert="~{sidebar :: sidebar}"></aside>
+        <aside layout:insert="~{blocks/sidebar :: sidebar}"></aside>
         <div class="layout-page">
-            <nav layout:insert="~{navbar :: navbar}"></nav>
+            <nav layout:insert="~{blocks/navbar :: navbar}"></nav>
             <div class="content-wrapper">
                 <div class="container-fluid">
                     <section layout:fragment="content">
