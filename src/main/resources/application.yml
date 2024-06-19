@@ -8,3 +8,7 @@ spring:
   jpa:
     generate-ddl: true
     show-sql: true
+
+server:
+  servlet:
+    context-path: /edu-tracker/teach/

@@ -17,7 +17,7 @@ public abstract class User {
     @Column(length = 100)
     private String name;
     @Column(length = 100)
-    private String surname;
+    private String middleName;
     @Column(length = 100)
     private String image;
     @Column(length = 100)
