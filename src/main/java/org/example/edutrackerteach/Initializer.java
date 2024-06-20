@@ -18,7 +18,7 @@ public class Initializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        if(studentService.count()!=0){
+        if(studentService.count()==0){
             Student student = new Student();
             student.setLastName("Деркач");
             student.setName("Денис");
@@ -28,7 +28,7 @@ public class Initializer implements CommandLineRunner {
             student.setGroupName("ТР-12");
             studentService.save(student);
         }
-        if(professorService.count()!=0){
+        if(professorService.count()==0){
             Professor professor = new Professor();
             professor.setLastName("Безпала");
             professor.setName("Ольга");

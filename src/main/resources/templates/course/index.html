@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Курси</title>
+    <script th:src="@{/js/course/index.js}"></script>
 </head>
 <body>
 <section layout:fragment="content">
@@ -19,8 +20,14 @@
         </nav>
     </div>
     <hr style="margin-top: 0"/>
-
-
+    <div class="text-end">
+        <button id="redirectToAdd" class="btn btn-primary">Створити курс</button>
+        <div id="toast-container" class="toast-top-right"></div>
+    </div>
+    <div id="courses"></div>
+    <ul class="pagination pagination-sm m-0 mt-1 mb-5" style="display: flex; justify-content: flex-end"
+        id="pagination_container">
+    </ul>
 </section>
 </body>
 </html>

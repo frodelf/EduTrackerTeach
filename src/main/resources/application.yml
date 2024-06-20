@@ -12,3 +12,8 @@ spring:
 server:
   servlet:
     context-path: /edu-tracker/teach/
+
+minio:
+  accessKey: admin
+  secretKey: password
+  endpoint: http://localhost:4401
