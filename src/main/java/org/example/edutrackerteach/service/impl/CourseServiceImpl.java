@@ -1,7 +1,10 @@
 package org.example.edutrackerteach.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.example.edutrackerteach.dto.course.CourseRequestAdd;
 import org.example.edutrackerteach.dto.course.CourseResponseViewAll;
+import org.example.edutrackerteach.entity.Course;
 import org.example.edutrackerteach.mapper.CourseMapper;
 import org.example.edutrackerteach.repository.CourseRepository;
 import org.example.edutrackerteach.service.CourseService;
@@ -25,5 +28,16 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void removeById(long id) {
         courseRepository.deleteById(id);
+    }
+    @Override
+    public Course getById(long id) {
+        return courseRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Object with id = "+id+" not found")
+        );
+    }
+
+    @Override
+    public long add(CourseRequestAdd courseRequestAdd) {
+        return 0;
     }
 }

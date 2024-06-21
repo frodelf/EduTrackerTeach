@@ -46,25 +46,26 @@ function addBlock(course) {
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-danger float-end" onclick="remove(${course.id})"><i class="fa-solid fa-trash"></i></button>
-                    <button class="btn btn-primary float-end" style="margin-right: 10px" onclick="edit(${course.id})"><i class="fa-solid fa-pencil"></i></button>
-                    <button class="btn btn-secondary float-end" style="margin-right: 10px" onclick="view(${course.id})"><i class="fa-regular fa-eye"></i></button>
+                    <button class="btn btn-outline-danger float-end" onclick="remove(${course.id})"><i class="fa-solid fa-trash"></i></button>
+                    <a href="${contextPath}course/edit/${course.id}" class="btn btn-outline-primary float-end" style="margin-right: 10px"><i class="fa-solid fa-pencil"></i></a>
+                    <button class="btn btn-outline-secondary float-end" style="margin-right: 10px" onclick="view(${course.id})"><i class="fa-regular fa-eye"></i></button>
                 </div>
             </div>
         </div>
     `
 }
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('redirectToAdd').onclick = function () {
-        window.location.href = contextPath+'course/add'
-    };
-});
-function edit(id){
-    window.location.href = contextPath+'course/edit/'+id
-}
 function view(id) {
-    var modalBlock = document.createElement('div');
-    modalBlock.innerHTML = `
+    if($('#ModalForView').html())$('#ModalForView').remove()
+
+    $.ajax({
+        type: "Get",
+        url: contextPath + 'course/statistic',
+        data: {
+            id: id
+        },
+        success: function (statistics) {
+            var modalBlock = document.createElement('div');
+            modalBlock.innerHTML = `
         <div class="modal fade" id="ModalForView" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -81,7 +82,7 @@ function view(id) {
                                         <i class="fa-solid fa-users" style="color: #B197FC;"></i>                                    
                                     </h2>
                                     <h4>Активні студенти</h4>
-                                    <h5>13</h5>
+                                    <h5>${statistics.students}</h5>
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +93,7 @@ function view(id) {
                                         <i class="fa-solid fa-book-open" style="color: #B197FC;"></i>
                                     </h2>
                                     <h4>Кількість літератури</h4>
-                                    <h5>67</h5>
+                                    <h5>${statistics.literatures}</h5>
                                     </div>
                                 </div>
                             </div>
@@ -103,7 +104,7 @@ function view(id) {
                                         <i class="fa-solid fa-person-chalkboard" style="color: #B197FC;"></i>
                                     </h2>
                                     <h4>Проведено занять</h4>
-                                    <h5>14</h5>
+                                    <h5>${statistics.lessons}</h5>
                                     </div>
                                 </div>
                             </div>
@@ -116,10 +117,10 @@ function view(id) {
                                     <h4>Кількість задач</h4>
                                     <h5>
                                         <div style="display: flex; justify-content: center; align-items: center">
-                                            <div>40   (</div>
-                                            <div style="color: green">13</div>
+                                            <div>${statistics.allTasks}  (</div>
+                                            <div style="color: green">${statistics.openTasks}</div>
                                             <div>-</div>
-                                            <div style="color: red">27</div>
+                                            <div style="color: red">${statistics.closeTasks}</div>
                                             <div>)</div>
                                         </div>
                                     </h5>
@@ -132,13 +133,16 @@ function view(id) {
             </div>
         </div>
     `;
-    if(!($('#ModalForView').html()))document.body.appendChild(modalBlock);
-    $('#ModalForView').modal('show');
+            document.body.appendChild(modalBlock);
+            $('#ModalForView').modal('show');
+        },
+    })
 }
 function remove(id){
     $.ajax({
-        type: "DELETE",
         url: contextPath + 'course/remove',
+        type: 'DELETE',
+        headers: {'X-XSRF-TOKEN': csrf_token},
         data: {
             id: id,
         },

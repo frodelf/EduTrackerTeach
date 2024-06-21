@@ -35,16 +35,18 @@
     <link rel="stylesheet" th:href="@{/assets/vendor/libs/select2/select2.css}">
     <link rel="stylesheet" th:href="@{/assets/vendor/libs/animate-css/animate.css}">
     <link rel="stylesheet" th:href="@{/assets/vendor/libs/sweetalert2/sweetalert2.css}">
+
     <script th:src="@{/assets/vendor/js/helpers.js}"></script>
     <script th:src="@{/assets/js/config.js}"></script>
     <script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
 
-
-    <script th:src="@{/js/global.js}"></script>
-    <script th:src="@{/js/pagination.js}"></script>
-    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendor/libs/spinkit/spinkit.css}" />
     <link rel="stylesheet" th:href="@{/assets/vendor/libs/animate-css/animate.css}"/>
     <link rel="stylesheet" th:href="@{/assets/vendor/libs/toastr/toastr.css}"/>
+
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <script th:src="@{/js/global.js}"></script>
+    <script th:src="@{/js/pagination.js}"></script>
 </head>
 <body>
 <div class="layout-wrapper layout-content-navbar">
@@ -57,7 +59,7 @@
                     <section layout:fragment="content">
                     </section>
                 </div>
-                <footer class="container-fluid content-footer footer bg-footer-theme">
+                <footer class="container-fluid content-footer footer bg-footer-theme mt-5">
                     <div class="footer-container d-flex align-items-center justify-content-between py-2 flex-md-row flex-column">
                         <div>
                             ©
@@ -86,5 +88,7 @@
 <script th:src="@{/assets/vendor/js/menu.js}"></script>
 <script th:src="@{/assets/js/main.js}"></script>
 <script th:src="@{/assets/vendor/libs/toastr/toastr.js}"></script>
+<script th:src="@{/assets/vendor/libs/block-ui/block-ui.js}"></script>
+
 </body>
 </html>

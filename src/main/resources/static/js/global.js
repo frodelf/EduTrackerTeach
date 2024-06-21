@@ -1,6 +1,32 @@
 var messageForDelete = "Об'єкт успішно видалено"
 var messageForSave = "Об'єкт успішно збережено"
 
+function showLoader(blockId) {
+    $("#" + blockId).block({
+        message: `
+            <div class="d-flex justify-content-center">
+                <p class="me-2 mb-0">Please wait...</p>
+                <div class="sk-wave sk-primary m-0">
+                    <div class="sk-rect sk-wave-rect"></div>
+                    <div class="sk-rect sk-wave-rect"></div>
+                    <div class="sk-rect sk-wave-rect"></div>
+                    <div class="sk-rect sk-wave-rect"></div>
+                    <div class="sk-rect sk-wave-rect"></div>
+                </div>
+            </div>`,
+        css: {
+            backgroundColor: "transparent",
+            border: "0"
+        },
+        overlayCSS: {
+            backgroundColor: "#fff",
+            opacity: 0.8
+        }
+    });
+}
+function hideLoader(blockId) {
+    $("#" + blockId).unblock();
+}
 function showSuccessToast(message) {
     toastr.options.progressBar = true;
     toastr.success(message)
@@ -9,11 +35,69 @@ function showErrorToast(message) {
     toastr.options.progressBar = true;
     toastr.error(message)
 }
-function showToastForDelete(){
+function showToastForDelete() {
     toastr.options.progressBar = true;
     toastr.success(messageForDelete)
 }
-function showToastForSave(){
+function showToastForSave() {
     toastr.options.closeButton = true
     toastr.success(messageForSave)
+}
+function previewImage(imgId, inputId) {
+    const img = document.getElementById(imgId);
+    const input = document.getElementById(inputId);
+    const file = input.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+function setImage(imageName, imageBlock){
+    $.ajax({
+        type: "Get",
+        url: contextPath + 'minio/get-image',
+        data: {
+            imageName: imageName
+        },
+        success: function (url) {
+            $("#" + imageBlock).attr("src", url)
+        }
+    })
+}
+
+var countError = 0;
+function validDataFromResponse(errors) {
+    for (var fieldName in errors) {
+        if (errors.hasOwnProperty(fieldName)) {
+            var errorMessage = errors[fieldName];
+            scrollToElement($('#' + fieldName.toString()));
+            addText($('#' + fieldName.toString()), errorMessage)
+            $('#' + fieldName.toString()).css("border", "1px solid #ff0000")
+        }
+    }
+    countError = 0
+}
+function scrollToElement($element) {
+    if (countError !== 0) return
+    countError++
+    if ($element.length > 0) {
+        var windowHeight = $(window).height();
+        var targetOffset = $element.offset().top - windowHeight / 4;
+
+        $('html, body').animate({
+            scrollTop: targetOffset
+        }, 100);
+    }
+}
+function addText(inputId, message) {
+    var icon = $('<p class="text-for-validating" style="color: #ff0000;">' + message + '</p>')
+    icon.tooltip({
+        content: message,
+        position: {my: "left+15 center", at: "right center"}
+    })
+    inputId.after(icon);
+    inputId.css("border-color", "#ff0000")
 }

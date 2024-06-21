@@ -24,4 +24,6 @@ public abstract class User {
     private String email;
     @Column(length = 100)
     private String telegram;
+    @Column(length = 100)
+    private String password;
 }

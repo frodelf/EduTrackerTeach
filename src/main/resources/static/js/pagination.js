@@ -136,18 +136,18 @@ function createEllipsisItem() {
 
 function updateLabelPagination(currentPage, container, totalElements, lastPageElements, sizePage) {
     if (totalElements > 0) {
-        let label = '<span data-translate="shown">Показано</span> ' + (currentPage * sizePage + 1) + '-' + Math.min((currentPage + 1) * sizePage, totalElements) + ` <span data-translate="of"> из </span> ` + totalElements;
+        let label = '<span>Показано</span> ' + (currentPage * sizePage + 1) + '-' + Math.min((currentPage + 1) * sizePage, totalElements) + ` <span> из </span> ` + totalElements;
 
         if (currentPage * sizePage == 0 && totalElements > 0) {
-            label = `<span data-translate="shown">Показано</span> ` + 1 + `-` + Math.min((currentPage + 1) * sizePage, totalElements) + ` <span data-translate="of">из</span> ` + totalElements;
+            label = `<span>Показано</span> ` + 1 + `-` + Math.min((currentPage + 1) * sizePage, totalElements) + ` <span>из</span> ` + totalElements;
         }
 
         if ((currentPage + 1) * sizePage > totalElements) {
-            label = `<span data-translate="shown">Показано</span> ` + (currentPage * sizePage) + `-` + (currentPage * sizePage + lastPageElements) + ` <span data-translate="of"> из </span> ` + totalElements;
+            label = `<span>Показано</span> ` + (currentPage * sizePage) + `-` + (currentPage * sizePage + lastPageElements) + ` <span> из </span> ` + totalElements;
         }
 
         if (currentPage * sizePage == 0 && totalElements > 0 && (currentPage + 1) * sizePage > totalElements) {
-            label = `<span data-translate="shown">Показано</span> ` + 1 + `-` + (currentPage * sizePage + lastPageElements) + ` <span data-translate="of">из</span> ` + totalElements;
+            label = `<span>Показано</span> ` + 1 + `-` + (currentPage * sizePage + lastPageElements) + ` <span>из</span> ` + totalElements;
         }
         var p = document.createElement('p');
         p.innerHTML = label;
