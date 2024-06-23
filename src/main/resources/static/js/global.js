@@ -24,25 +24,31 @@ function showLoader(blockId) {
         }
     });
 }
+
 function hideLoader(blockId) {
     $("#" + blockId).unblock();
 }
+
 function showSuccessToast(message) {
     toastr.options.progressBar = true;
     toastr.success(message)
 }
+
 function showErrorToast(message) {
     toastr.options.progressBar = true;
     toastr.error(message)
 }
+
 function showToastForDelete() {
     toastr.options.progressBar = true;
     toastr.success(messageForDelete)
 }
+
 function showToastForSave() {
     toastr.options.closeButton = true
     toastr.success(messageForSave)
 }
+
 function previewImage(imgId, inputId) {
     const img = document.getElementById(imgId);
     const input = document.getElementById(inputId);
@@ -55,7 +61,8 @@ function previewImage(imgId, inputId) {
         reader.readAsDataURL(file);
     }
 }
-function setImage(imageName, imageBlock){
+
+function setImage(imageName, imageBlock) {
     $.ajax({
         type: "Get",
         url: contextPath + 'minio/get-image',
@@ -69,7 +76,9 @@ function setImage(imageName, imageBlock){
 }
 
 var countError = 0;
+
 function validDataFromResponse(errors) {
+    cleanInputs()
     for (var fieldName in errors) {
         if (errors.hasOwnProperty(fieldName)) {
             var errorMessage = errors[fieldName];
@@ -80,6 +89,7 @@ function validDataFromResponse(errors) {
     }
     countError = 0
 }
+
 function scrollToElement($element) {
     if (countError !== 0) return
     countError++
@@ -92,7 +102,9 @@ function scrollToElement($element) {
         }, 100);
     }
 }
+
 function addText(inputId, message) {
+    message = translateError(message)
     var icon = $('<p class="text-for-validating" style="color: #ff0000;">' + message + '</p>')
     icon.tooltip({
         content: message,
@@ -100,4 +112,54 @@ function addText(inputId, message) {
     })
     inputId.after(icon);
     inputId.css("border-color", "#ff0000")
+}
+
+function modalForLogoutModal() {
+    var modalBlock = document.createElement('div');
+    modalBlock.innerHTML = `
+        <div class="modal fade" id="ModalForLogout" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-center" style="font-size: 20px">
+                        Ви впевнені що хочете вийти?
+                    </div>
+                    <div class="modal-footer">
+                        <a href="${contextPath}logout" class="btn btn-danger float-end">Вийти</a>
+                        <button class="btn btn-secondary float-end" data-bs-dismiss="modal">Скасувати</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modalBlock);
+    $('#ModalForLogout').modal('show');
+}
+
+function translateError(key) {
+    return key
+        .replace('Please fill in the field', 'Заповніть поле')
+        .replace('The number should be greater than', 'Число повинно бути більше, ніж')
+        .replace('The number should be less than', 'Число повинно бути менше, ніж')
+        .replace('The field should have fewer than', 'Поле повинно містити менше ніж')
+        .replace('characters and more than', 'і більше ніж')
+        .replace('ones', 'символів')
+        .replace('characters', 'символів')
+        .replace('Invalid email format', 'Невірний формат електронної пошти')
+        .replace('Invalid phone format', 'Невірний формат телефону')
+        .replace('File extension not valid', 'Тип файлу повиннен бути .jpeg, .png, .jpg')
+}
+
+function cleanInputs() {
+    $('.text-for-validating').remove()
+    var elements = document.querySelectorAll('input, select, textarea, button, .ql-editor,form');
+    for (var i = 0; i < elements.length; i++) {
+        var element = elements[i];
+        element.style.borderColor = '';
+    }
+    var select2Selects = document.querySelectorAll('.select2-selection');
+    for (var i = 0; i < select2Selects.length; i++) {
+        var select2Select = select2Selects[i];
+        select2Select.style.borderColor = '';
+    }
+    $("#goal").css("border", "")
 }

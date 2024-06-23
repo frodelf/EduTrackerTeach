@@ -32,7 +32,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course getById(long id) {
         return courseRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Object with id = "+id+" not found")
+                () -> new EntityNotFoundException("Course with id = "+id+" not found")
         );
     }
 

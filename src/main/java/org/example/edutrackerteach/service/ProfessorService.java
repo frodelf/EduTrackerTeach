@@ -6,4 +6,5 @@ public interface ProfessorService {
     Professor save(Professor professor);
     long count();
     Professor getByEmailForAuth(String username);
+    Professor getById(long id);
 }

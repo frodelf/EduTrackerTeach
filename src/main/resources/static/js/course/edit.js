@@ -60,20 +60,37 @@ if (course) {
     })
 }
 document.addEventListener('DOMContentLoaded', function () {
+    console.log(csrf_token)
     document.getElementById('cancel').onclick = function () {
         window.location.href = contextPath + 'course'
     }
-    document.getElementById('image').onchange = function () {
-        previewImage("image-preview", "image")
-    }
+    $(".check-image-extension").change(function () {
+        var file = this.files[0]
+        if (file) {
+            var fileName = file.name
+            var fileExtension = fileName.split('.').pop().toLowerCase()
+
+            var allowedExtensions = ['png', 'jpeg', 'jpg']
+
+            if (allowedExtensions.indexOf(fileExtension) === -1) {
+                toastr.options.progressBar = true;
+                toastr.error('Дозволені тільки файли з розширеннями .png, .jpeg або .jpg')
+                $(this).val('')
+                return
+            }
+            previewImage("image-preview", "image")
+        }
+    })
 })
 
 function save() {
-    let formData = new FormData();
-    formData.append("name", $("#name").val());
-    formData.append("goal", $("#goal").val());
-    formData.append("maximumMark", $("#maximumMark").val());
-    formData.append("image", $("#image")[0].files[0]);
+    let formData = new FormData()
+    formData.append("name", $("#name").val())
+    if(snowEditor.root.innerHTML !== '<p><br></p>') formData.append("goal", snowEditor.root.innerHTML)
+    formData.append("maximumMark", $("#maximumMark").val())
+    if($("#image")[0].files[0]){
+        formData.append("image", $("#image")[0].files[0])
+    }
 
     $.ajax({
         url: contextPath + 'course/add',
@@ -83,6 +100,7 @@ function save() {
         contentType: false,
         processData: false,
         success: function (request) {
+            cleanInputs()
             showToastForSave()
         },
         error: function (xhr, status, error) {

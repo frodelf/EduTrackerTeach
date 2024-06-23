@@ -1,5 +1,6 @@
 package org.example.edutrackerteach.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.edutrackerteach.entity.Professor;
@@ -25,6 +26,12 @@ public class ProfessorServiceImpl implements ProfessorService {
     public Professor getByEmailForAuth(String username) {
         return professorRepository.findByEmail(username).orElseThrow(
                 () -> new AuthenticationCredentialsNotFoundException("Credential isn't correct")
+        );
+    }
+    @Override
+    public Professor getById(long id) {
+        return professorRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Professor with id = "+id+" not found")
         );
     }
 }

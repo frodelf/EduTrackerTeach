@@ -43,10 +43,6 @@ public class CourseController {
     }
     @PostMapping("/add")
     public ResponseEntity<?> add(@ModelAttribute @Valid CourseRequestAdd courseRequestAdd) {
-//        Map<String, String> errors = new HashMap<>();
-//        errors.put("name", "skpjvfbns;ld lsdf bvlsjdbvjdsibn");
-//        errors.put("goal", "asdngvaiojfoka");
-//        return ResponseEntity.badRequest().body(errors);
         return ResponseEntity.ok(courseService.add(courseRequestAdd));
     }
     @DeleteMapping("/remove")

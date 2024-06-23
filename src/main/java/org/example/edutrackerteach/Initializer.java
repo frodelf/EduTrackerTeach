@@ -6,6 +6,7 @@ import org.example.edutrackerteach.entity.Student;
 import org.example.edutrackerteach.service.ProfessorService;
 import org.example.edutrackerteach.service.StudentService;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ public class Initializer implements CommandLineRunner {
             student.setName("Денис");
             student.setMiddleName("Денис");
             student.setEmail("student@gmail.com");
+            student.setPassword(new BCryptPasswordEncoder().encode("student"));
             student.setTelegram("@student_tg");
             student.setGroupName("ТР-12");
             studentService.save(student);
@@ -34,6 +36,7 @@ public class Initializer implements CommandLineRunner {
             professor.setName("Ольга");
             professor.setMiddleName("Миколаївна");
             professor.setEmail("professor@gmail.com");
+            professor.setPassword(new BCryptPasswordEncoder().encode("professor"));
             professor.setTelegram("@professor_tg");
             professor.setDegree("Старший викладач");
             professorService.save(professor);

@@ -14,7 +14,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/login").permitAll()
+                                .requestMatchers("/course/**").authenticated()
                                 .anyRequest().permitAll()
                 )
                 .formLogin(form ->
@@ -22,8 +22,12 @@ public class SecurityConfig {
                                 .loginProcessingUrl("/process_login")
                                 .defaultSuccessUrl("/", true)
                                 .failureUrl("/login?error")
+                )
+                .logout(logout ->
+                        logout
+                                .logoutUrl("/logout")
+                                .logoutSuccessUrl("/login")
                 );
-
         return http.build();
     }
 }

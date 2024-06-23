@@ -32,7 +32,7 @@
                 <center>
                     <img id="image-preview" th:src="@{/img/default.png}" width="70%" height="auto">
                 </center>
-                <input id="image" type="file" class="form-control mt-3 mb-3">
+                <input id="image" accept=".png, .jpeg, .jpg" type="file" class="form-control mt-3 mb-3 check-image-extension">
                 Назва курсу
                 <input id="name" class="form-control mb-3">
                 Максимальна можлива оцінка за курс
