@@ -53,7 +53,7 @@ public class MinioServiceImpl implements MinioService {
         log.info("MinioServiceImpl-deleteImg successfully");
     }
     public String putMultipartFile(MultipartFile multipartFile) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-        log.info("MinioServiceImpl-putMultipartFile successfully");
+        log.info("MinioServiceImpl-putMultipartFile start");
         String nameFile = UUID.randomUUID() + "." + multipartFile.getOriginalFilename();
 
         File tempFile = File.createTempFile("tempfile", nameFile);
@@ -67,7 +67,7 @@ public class MinioServiceImpl implements MinioService {
                 .build());
 
         tempFile.delete();
-        log.info("MinioServiceImpl-putMultipartFile start");
+        log.info("MinioServiceImpl-putMultipartFile successfully");
         return nameFile;
     }
     public String getUrl(String fileName) throws ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, IOException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {

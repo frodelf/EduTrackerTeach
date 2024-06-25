@@ -19,6 +19,7 @@ public class UserDetailsImpl implements UserDetails {
     private String username;
     private String name;
     private String password;
+    private Professor professor;
 
     @Override
     public boolean isAccountNonExpired() {
@@ -37,7 +38,7 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
     public UserDetailsImpl getUserDetailsByUsers(Professor professor){
-        return new UserDetailsImpl(professor.getId(), professor.getEmail(), professor.getName(), professor.getPassword());
+        return new UserDetailsImpl(professor.getId(), professor.getEmail(), professor.getName(), professor.getPassword(), professor);
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

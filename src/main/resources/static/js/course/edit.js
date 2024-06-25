@@ -1,3 +1,4 @@
+var courseId
 const snowEditor = new Quill('#goal', {
     bounds: '#goal',
     modules: {
@@ -8,6 +9,7 @@ const snowEditor = new Quill('#goal', {
 })
 
 if (course) {
+    courseId = course.id
     $("#name").val(course.name)
     $("#maximumMark").val(course.maximumMark)
     setImage(course.image, 'image-preview')
@@ -60,7 +62,6 @@ if (course) {
     })
 }
 document.addEventListener('DOMContentLoaded', function () {
-    console.log(csrf_token)
     document.getElementById('cancel').onclick = function () {
         window.location.href = contextPath + 'course'
     }
@@ -84,7 +85,9 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 function save() {
+    showLoader("content-form")
     let formData = new FormData()
+    if(courseId)formData.append("id", courseId)
     formData.append("name", $("#name").val())
     if(snowEditor.root.innerHTML !== '<p><br></p>') formData.append("goal", snowEditor.root.innerHTML)
     formData.append("maximumMark", $("#maximumMark").val())
@@ -109,6 +112,10 @@ function save() {
             } else {
                 console.error('Помилка відправки файлів на сервер:', error);
             }
+        },
+        complete: function (xhr, status) {
+            hideLoader("content-form")
+            console.log('Запит завершено');
         }
     })
 }

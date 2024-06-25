@@ -1,8 +1,10 @@
 package org.example.edutrackerteach.mapper;
 
 import lombok.SneakyThrows;
+import org.example.edutrackerteach.dto.course.CourseRequestAdd;
 import org.example.edutrackerteach.dto.course.CourseResponseViewAll;
 import org.example.edutrackerteach.entity.Course;
+import org.example.edutrackerteach.service.CourseService;
 import org.example.edutrackerteach.service.MinioService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,5 +32,13 @@ public class CourseMapper {
                 courses.getPageable(),
                 courses.getTotalElements()
         );
+    }
+    public Course toEntityForAdd(CourseRequestAdd requestAdd, CourseService courseService) {
+        Course course = new Course();
+        if(requestAdd.getId() != null) course = courseService.getById(requestAdd.getId());
+        if(requestAdd.getName() != null) course.setName(requestAdd.getName());
+        if(requestAdd.getMaximumMark() != null) course.setMaximumMark(requestAdd.getMaximumMark());
+        if(requestAdd.getGoal() != null) course.setGoal(requestAdd.getGoal());
+        return course;
     }
 }
