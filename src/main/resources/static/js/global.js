@@ -163,3 +163,37 @@ function cleanInputs() {
     }
     $("#goal").css("border", "")
 }
+
+$(document).ready(function () {
+    $(".phone").each(function (index, element) {
+        new Cleave("#" + element.id, {
+            blocks: [13],
+            numericOnly: true,
+            prefix: "+380"
+        })
+    });
+    $('.onlyNumber').on('input', function () {
+        $(this).val(function (_, value) {
+            return value.replace(/[^\d.]+/g, '').replace(/^(\d*\.\d*)\..*$/, '$1');
+        });
+    });
+})
+function forSelect2(selectId, url, selectedItemId){
+    $(selectId).select2({
+        placeholder: "виберіть об'єкт",
+        ajax: {
+            type: "Get",
+            url: url,
+            processResults: function (data) {
+                var results = Object.keys(data).map(function(key) {
+                    return { id: key, text: data[key] };
+                });
+                return {
+                    results: results
+                }
+            },
+        },
+        minimumResultsForSearch: Infinity
+    })
+    if(selectedItemId)$(selectId).val(selectedItemId).trigger('change')
+}

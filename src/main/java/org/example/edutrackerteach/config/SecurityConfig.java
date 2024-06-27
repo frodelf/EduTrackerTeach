@@ -15,6 +15,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/course/**").authenticated()
+                                .requestMatchers("/student/**").authenticated()
                                 .anyRequest().permitAll()
                 )
                 .formLogin(form ->

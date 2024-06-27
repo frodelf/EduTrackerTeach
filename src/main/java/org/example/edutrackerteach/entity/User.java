@@ -21,6 +21,8 @@ public abstract class User {
     @Column(length = 100)
     private String image;
     @Column(length = 100)
+    private String phone;
+    @Column(length = 100)
     private String email;
     @Column(length = 100)
     private String telegram;

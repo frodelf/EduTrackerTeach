@@ -76,7 +76,14 @@ public class CourseController {
 
         return ResponseEntity.ok(statistic);
     }
-
+    @GetMapping("/get-for-select")
+    public ResponseEntity<Map<String, String>> getForSelect(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        Map<String, String> forSelect = new HashMap<>();
+        for (Course course : userDetails.getProfessor().getCourses()) {
+            forSelect.put(course.getId().toString(), course.getName());
+        }
+        return ResponseEntity.ok(forSelect);
+    }
     @ModelAttribute
     public void activeMenuItem(Model model) {
         model.addAttribute("courseActive", true);

@@ -24,7 +24,7 @@ public class Course {
     @JoinColumn(name = "professor_id")
     @JsonBackReference
     private Professor professor;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "course_student",
             joinColumns = @JoinColumn(name = "course_id"),
@@ -36,5 +36,4 @@ public class Course {
     private List<Literature> literatures;
     @OneToMany
     private List<Task> tasks;
-
 }
