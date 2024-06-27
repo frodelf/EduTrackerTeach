@@ -178,15 +178,16 @@ $(document).ready(function () {
         });
     });
 })
-function forSelect2(selectId, url, selectedItemId){
+
+function forSelect2(selectId, url, selectedItemId) {
     $(selectId).select2({
         placeholder: "виберіть об'єкт",
         ajax: {
             type: "Get",
             url: url,
             processResults: function (data) {
-                var results = Object.keys(data).map(function(key) {
-                    return { id: key, text: data[key] };
+                var results = Object.keys(data).map(function (key) {
+                    return {id: key, text: data[key]};
                 });
                 return {
                     results: results
@@ -195,5 +196,39 @@ function forSelect2(selectId, url, selectedItemId){
         },
         minimumResultsForSearch: Infinity
     })
-    if(selectedItemId)$(selectId).val(selectedItemId).trigger('change')
+    if (selectedItemId) $(selectId).val(selectedItemId).trigger('change')
+}
+
+function forSelect2WithSearchAndPageable(selectId, url, selectedItemId) {
+    $(selectId).select2({
+        placeholder: "виберіть об'єкт",
+        ajax: {
+            type: "Get",
+            url: url,
+            dataType: 'json',
+            delay: 1500,
+            data: function (params) {
+                var number = params.page > 0 ? params.page - 1 : 0;
+                return {
+                    query: params.term || '',
+                    page: number,
+                    size: 10
+                };
+            },
+            processResults: function (data) {
+                var results = Object.keys(data.content).map(function (key) {
+                    return {id: key, text: data.content[key]}
+                })
+                var hasMore = data.totalPages > data.number
+                return {
+                    results: results,
+                    pagination: {
+                        more: false
+                    }
+                }
+            },
+            cache: true
+        }
+    });
+    if (selectedItemId) $(selectId).val(selectedItemId).trigger('change')
 }

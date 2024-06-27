@@ -87,9 +87,9 @@ function showModalForAddStudentStepFirst() {
                     </div>
                     <div class="modal-body">
                         Групи
-                        <input class="form-control mb-3">
+                        <select id="groupForStudentAdding"></select>
                         Курс
-                        <input id="name" class="form-control mb-3">
+                        <select id="coursesForStudentAdding"></select>
                     </div>
                     <div class="modal-footer">
                         <button class="float-end btn btn-primary">Шукати</button>
@@ -100,6 +100,8 @@ function showModalForAddStudentStepFirst() {
     `;
     document.body.appendChild(modalBlock);
     $('#ModalForAddStudentStepFirst').modal('show');
+    forSelect2("#coursesForStudentAdding", contextPath+"course/get-for-select")
+    forSelect2WithSearchAndPageable("#groupForStudentAdding", contextPath+"student/get-group-for-select")
 }
 
 function remove(id) {
