@@ -3,6 +3,7 @@ package org.example.edutrackerteach.service;
 import org.example.edutrackerteach.dto.ForSelect2Dto;
 import org.example.edutrackerteach.dto.student.StudentRequestFilter;
 import org.example.edutrackerteach.dto.student.StudentResponseViewAll;
+import org.example.edutrackerteach.dto.student.StudentResponseViewOnePage;
 import org.example.edutrackerteach.entity.Course;
 import org.example.edutrackerteach.entity.Student;
 import org.springframework.data.domain.Page;
@@ -17,4 +18,5 @@ public interface StudentService {
     Page<StudentResponseViewAll> getAllByCourseList(int page, int pageSize, List<Course> courseList, StudentRequestFilter studentRequestFilter);
     void removeById(Long id);
     Page<Map<String, String>> getAllByGroupForSelect(ForSelect2Dto forSelect2Dto);
+    StudentResponseViewOnePage getByIdForView(Long id);
 }

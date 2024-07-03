@@ -1,6 +1,7 @@
 package org.example.edutrackerteach.mapper;
 
 import org.example.edutrackerteach.dto.student.StudentResponseViewAll;
+import org.example.edutrackerteach.dto.student.StudentResponseViewOnePage;
 import org.example.edutrackerteach.entity.Course;
 import org.example.edutrackerteach.entity.Student;
 import org.springframework.data.domain.Page;
@@ -31,5 +32,18 @@ public class StudentMapper {
         return new PageImpl<>(students.getContent().stream()
                 .map(this::toDtoForViewAll)
                 .collect(Collectors.toList()), students.getPageable(), students.getTotalElements());
+    }
+
+    public StudentResponseViewOnePage toDtoForViewOnePage(Student student) {
+        StudentResponseViewOnePage studentResponseViewOnePage = new StudentResponseViewOnePage();
+        if(student.getId() != null)studentResponseViewOnePage.setId(student.getId());
+        if(student.getLastName() != null)studentResponseViewOnePage.setLastName(student.getLastName());
+        if(student.getName() != null)studentResponseViewOnePage.setName(student.getName());
+        if(student.getMiddleName() != null)studentResponseViewOnePage.setMiddleName(student.getMiddleName());
+        if(student.getPhone() != null)studentResponseViewOnePage.setPhone(student.getPhone());
+        if(student.getEmail() != null)studentResponseViewOnePage.setEmail(student.getEmail());
+        if(student.getTelegram() != null)studentResponseViewOnePage.setTelegram(student.getTelegram());
+        if(student.getGroupName() != null)studentResponseViewOnePage.setGroupName(student.getGroupName());
+        return studentResponseViewOnePage;
     }
 }

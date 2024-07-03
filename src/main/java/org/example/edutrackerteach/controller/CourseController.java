@@ -6,9 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.example.edutrackerteach.dto.course.CourseRequestAdd;
 import org.example.edutrackerteach.dto.course.CourseResponseViewAll;
 import org.example.edutrackerteach.entity.Course;
+import org.example.edutrackerteach.entity.Student;
 import org.example.edutrackerteach.entity.UserDetailsImpl;
 import org.example.edutrackerteach.service.CourseService;
 import org.example.edutrackerteach.service.LessonService;
+import org.example.edutrackerteach.service.StudentService;
 import org.example.edutrackerteach.service.TaskService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CourseController {
     private final CourseService courseService;
+    private final StudentService studentService;
     private final LessonService lessonService;
     private final TaskService taskService;
     @GetMapping
@@ -81,6 +84,16 @@ public class CourseController {
         Map<String, String> forSelect = new HashMap<>();
         for (Course course : userDetails.getProfessor().getCourses()) {
             forSelect.put(course.getId().toString(), course.getName());
+        }
+        return ResponseEntity.ok(forSelect);
+    }
+    @GetMapping("/get-for-select-by-student/{studentId}")
+    public ResponseEntity<Map<String, String>> getForSelect(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long studentId){
+        Map<String, String> forSelect = new HashMap<>();
+        Student student = studentService.getById(studentId);
+        for (Course course : userDetails.getProfessor().getCourses()) {
+            if(student.getCourses().stream().anyMatch(courseStudent -> courseStudent.getId().equals(course.getId())))
+                forSelect.put(course.getId().toString(), course.getName());
         }
         return ResponseEntity.ok(forSelect);
     }

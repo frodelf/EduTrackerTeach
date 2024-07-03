@@ -11,9 +11,16 @@ import java.util.List;
 
 public class StudentSpecification  implements Specification<Student> {
     private StudentRequestFilter studentRequestFilter;
+    private List<Course> courses;
     public StudentSpecification(StudentRequestFilter studentRequestFilter) {
         this.studentRequestFilter = studentRequestFilter;
     }
+
+    public StudentSpecification(StudentRequestFilter studentRequestFilter, List<Course> courseList) {
+        this.studentRequestFilter = studentRequestFilter;
+        this.courses = courseList;
+    }
+
     @Override
     public Predicate toPredicate(Root<Student> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
@@ -48,6 +55,11 @@ public class StudentSpecification  implements Specification<Student> {
             Join<Student, Course> courseJoin = root.join("courses", JoinType.INNER);
             predicates.add(criteriaBuilder.equal(courseJoin.get("id"), studentRequestFilter.getCourse()));
         }
+        else {
+            Join<Student, Course> coursesJoin = root.join("courses");
+            predicates.add(coursesJoin.in(courses));
+        }
+        query.distinct(true);
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 }

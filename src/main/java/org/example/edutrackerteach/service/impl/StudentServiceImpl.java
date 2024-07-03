@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.edutrackerteach.dto.ForSelect2Dto;
 import org.example.edutrackerteach.dto.student.StudentRequestFilter;
 import org.example.edutrackerteach.dto.student.StudentResponseViewAll;
+import org.example.edutrackerteach.dto.student.StudentResponseViewOnePage;
 import org.example.edutrackerteach.entity.Course;
 import org.example.edutrackerteach.entity.Student;
 import org.example.edutrackerteach.mapper.StudentMapper;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Objects.nonNull;
 
 @Service
 @RequiredArgsConstructor
@@ -45,11 +48,13 @@ public class StudentServiceImpl implements StudentService {
     public Page<StudentResponseViewAll> getAllByCourseList(int page, int pageSize, List<Course> courseList, StudentRequestFilter studentRequestFilter) {
         if(!studentRequestFilter.getGroup().isBlank() || !studentRequestFilter.getFullName().isBlank() || !studentRequestFilter.getTelegram().isBlank() || !studentRequestFilter.getPhone().isBlank() || studentRequestFilter.getCourse() != null){
             Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Order.desc("id")));
-            Specification<Student> spec = new StudentSpecification(studentRequestFilter);
+            Specification<Student> spec;
+            if(nonNull(studentRequestFilter.getCourse())) spec = new StudentSpecification(studentRequestFilter);
+            else spec = new StudentSpecification(studentRequestFilter, courseList);
             return studentMapper.toDtoListForViewAll(studentRepository.findAll(spec, pageable));
         }
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Order.desc("id")));
-        return studentMapper.toDtoListForViewAll(studentRepository.findAllByCoursesIn(courseList, pageable));
+        return studentMapper.toDtoListForViewAll(studentRepository.findDistinctByCoursesIn(courseList, pageable));
     }
     @Override
     public void removeById(Long id) {
@@ -66,5 +71,9 @@ public class StudentServiceImpl implements StudentService {
             list.add(map);
         }
         return new PageImpl<>(list, pageable, groups.getTotalElements());
+    }
+    @Override
+    public StudentResponseViewOnePage getByIdForView(Long id) {
+        return studentMapper.toDtoForViewOnePage(getById(id));
     }
 }
