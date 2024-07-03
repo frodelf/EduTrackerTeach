@@ -1,9 +1,6 @@
 package org.example.edutrackerteach.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -15,4 +12,7 @@ public class Task {
     private String name;
     private String file;
     private String status;
+    @ManyToOne
+    @JoinColumn(name="course_id", nullable=false)
+    private Course course;
 }

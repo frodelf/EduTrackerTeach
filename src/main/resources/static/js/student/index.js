@@ -10,14 +10,15 @@ $(document).ready(function () {
             }, 1000)
         })
     })
-    $('#coursesEl').on('change', function() {
+    $('#coursesEl').on('change', function () {
         getPageWithFilter(0)
     })
 
-    forSelect2("#coursesEl", contextPath+"course/get-for-select")
+    forSelect2("#coursesEl", contextPath + "course/get-for-select")
 
     getPageWithFilter(page)
 })
+
 function getPageWithFilter(page) {
     this.page = page
     var filterElements = $('.for-filter');
@@ -64,7 +65,7 @@ function getPageWithFilter(page) {
 
                 var cell5 = newRow.insertCell(5);
                 cell5.innerHTML = `
-<a href="${contextPath}student/${object.id}" class="btn btn-outline-secondary float-end" style="margin-right: 10px"><i class="fa-regular fa-eye"></i></a>
+<a href="${contextPath}student/${object.id}" class="btn btn-outline-secondary float-end"><i class="fa-regular fa-eye"></i></a>
 <button onclick="remove(${object.id})" class="btn btn-outline-primary"><i class="fa-solid fa-trash"></i></button>`;
             }
             $('#pagination_container').empty();
@@ -86,13 +87,13 @@ function showModalForAddStudentStepFirst() {
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Групи
+                        Група
                         <select id="groupForStudentAdding"></select>
                         Курс
                         <select id="coursesForStudentAdding"></select>
                     </div>
                     <div class="modal-footer">
-                        <button class="float-end btn btn-primary">Шукати</button>
+                        <button class="float-end btn btn-primary" onclick="searchStudent()">Шукати</button>
                     </div>
                 </div>
             </div>
@@ -100,10 +101,68 @@ function showModalForAddStudentStepFirst() {
     `;
     document.body.appendChild(modalBlock);
     $('#ModalForAddStudentStepFirst').modal('show');
-    forSelect2("#coursesForStudentAdding", contextPath+"course/get-for-select")
-    forSelect2WithSearchAndPageable("#groupForStudentAdding", contextPath+"student/get-group-for-select")
+    forSelect2("#coursesForStudentAdding", contextPath + "course/get-for-select")
+    forSelect2WithSearchAndPageable("#groupForStudentAdding", contextPath + "student/get-group-for-select")
 }
 
+function searchStudent() {
+    cleanInputs()
+    var valid = true
+    if (!($("#groupForStudentAdding").val())) {
+        validSelect2($("#groupForStudentAdding"))
+        valid = false
+    }
+    if (!($("#coursesForStudentAdding").val())) {
+        validSelect2($("#coursesForStudentAdding"))
+        valid = false
+    }
+    if(!valid)return
+
+    $('#ModalForAddStudentStepFirst').modal('hide');
+    showModalForAddStudentStepSecond()
+}
+function showModalForAddStudentStepSecond() {
+    if ($('#ModalForAddStudentStepSecond').html()) $('#ModalForAddStudentStepSecond').remove()
+
+    var modalBlock = document.createElement('div');
+    modalBlock.innerHTML = `
+        <div class="modal fade" id="ModalForAddStudentStepSecond" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Студенти</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover table-striped linkedRow" id="courseTable"
+                                           style="table-layout: fixed;">
+                                        <thead>
+                                        <tr>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="card-header">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="float-end btn btn-primary">Додати</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modalBlock);
+    $('#ModalForAddStudentStepSecond').modal('show');
+}
 function remove(id) {
     $.ajax({
         url: contextPath + 'student/remove',

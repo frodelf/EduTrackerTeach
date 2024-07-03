@@ -8,12 +8,14 @@ import org.example.edutrackerteach.entity.Course;
 import org.example.edutrackerteach.entity.Student;
 import org.example.edutrackerteach.entity.UserDetailsImpl;
 import org.example.edutrackerteach.service.CourseService;
+import org.example.edutrackerteach.service.ReviewService;
 import org.example.edutrackerteach.service.StudentService;
 import org.example.edutrackerteach.service.StudentsTaskService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -29,6 +31,7 @@ public class StudentController {
     private final StudentService studentService;
     private final CourseService courseService;
     private final StudentsTaskService studentsTaskService;
+    private final ReviewService reviewService;
     @GetMapping
     public ModelAndView index() {
         return new ModelAndView("student/index");
@@ -58,15 +61,23 @@ public class StudentController {
         if(nonNull(courseId)){
             Course course = courseService.getById(courseId);
             map.put("courses", course.getName());
-            map.put("allTasks", String.valueOf(studentsTaskService.getAllByStudentId(studentId)));
-            map.put("doneTasks", String.valueOf(studentsTaskService.getAllDoneTaskByStudentId(studentId)));
-            map.put("notDoneTasks", String.valueOf(studentsTaskService.getAllNotDoneTaskByStudentId(studentId)));
-            map.put("lessons", "6");
-            map.put("mark", "30");
+            map.put("allTasks", String.valueOf(studentsTaskService.countAllByStudentIdAndCourseId(studentId, courseId)));
+            map.put("doneTasks", String.valueOf(studentsTaskService.countAllDoneTaskByStudentIdAndCourseId(studentId, courseId)));
+            map.put("notDoneTasks", String.valueOf(studentsTaskService.countAllNotDoneTaskByStudentIdAndCourseId(studentId, courseId)));
+            map.put("lessons", String.valueOf(reviewService.countAllVisitedLessonByStudentIdAndCourseId(studentId, courseId)));
+            map.put("mark", String.valueOf(studentsTaskService.countMarkByStudentIdAndCourseId(studentId, courseId)));
         }else {
-
+            map.put("courses", String.valueOf(student.getCourses().size()));
+            map.put("allTasks", String.valueOf(studentsTaskService.countAllByStudentId(studentId)));
+            map.put("doneTasks", String.valueOf(studentsTaskService.countAllDoneTaskByStudentId(studentId)));
+            map.put("notDoneTasks", String.valueOf(studentsTaskService.countAllNotDoneTaskByStudentId(studentId)));
+            map.put("lessons", String.valueOf(reviewService.countAllVisitedLessonByStudentId(studentId)));
         }
         map.put("withCourse", String.valueOf(nonNull(courseId)));
         return ResponseEntity.ok(map);
+    }
+    @ModelAttribute
+    public void activeMenuItem(Model model) {
+        model.addAttribute("studentActive", true);
     }
 }

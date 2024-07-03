@@ -20,6 +20,7 @@ public class StudentMapper {
         if(student.getMiddleName() != null)studentResponseViewAll.setMiddleName(student.getMiddleName());
         if(student.getTelegram() != null)studentResponseViewAll.setTelegram(student.getTelegram());
         if(student.getTelegram() != null)studentResponseViewAll.setTelegram(student.getTelegram());
+        if(student.getPhone() != null)studentResponseViewAll.setPhone(student.getPhone());
         studentResponseViewAll.setCourses(new HashMap<>());
         if(student.getCourses()!=null && !student.getCourses().isEmpty()){
             for (Course course : student.getCourses()) {

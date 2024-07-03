@@ -7,14 +7,15 @@ function updatePagination(currentPage, totalButtons, container) {
     var pagination = document.createElement("div")
 
     var li, link;
-    if (currentPage > 0) {
+    if (currentPage >= 0) {
         li = document.createElement('span');
         li.className = "page-link";
         li.setAttribute("href", "#");
         li.setAttribute("aria-label", "Previous");
         link = document.createElement('span');
         link.innerHTML = "&#10094;";
-        li.setAttribute("onclick", `getPageWithFilter(${currentPage - 1})`);
+        if(currentPage == 0)li.classList.add("disabled")
+        else li.setAttribute("onclick", `getPageWithFilter(${currentPage - 1})`);
         li.appendChild(link);
         pagination.appendChild(li);
     }
@@ -85,7 +86,7 @@ function updatePagination(currentPage, totalButtons, container) {
         }
     }
 
-    if (totalButtons > (currentPage + 1) && totalButtons > 1) {
+    if (totalButtons >= (currentPage + 1) && totalButtons > 1) {
         li = document.createElement('span');
         li.className = "page-link";
         li.setAttribute("href", "#");
@@ -93,7 +94,8 @@ function updatePagination(currentPage, totalButtons, container) {
         link = document.createElement('span');
         link.innerHTML = "&#10095;";
         li.appendChild(link);
-        li.setAttribute("onclick", `getPageWithFilter(${currentPage + 1})`)
+        if(totalButtons == (currentPage + 1))li.classList.add("disabled")
+        else li.setAttribute("onclick", `getPageWithFilter(${currentPage + 1})`);
         pagination.appendChild(li);
     }
 

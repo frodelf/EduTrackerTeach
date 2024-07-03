@@ -1,6 +1,10 @@
 var messageForDelete = "Об'єкт успішно видалено"
 var messageForSave = "Об'єкт успішно збережено"
-
+// $(document).ready(function () {
+//     document.addEventListener('click', function(event) {
+//         console.log(event.target);
+//     });
+// })
 function showLoader(blockId) {
     $("#" + blockId).block({
         message: `
@@ -201,6 +205,8 @@ function forSelect2(selectId, url, selectedItemId) {
 
 function forSelect2WithSearchAndPageable(selectId, url, selectedItemId) {
     $(selectId).select2({
+        //TODO доробити пошук
+        minimumResultsForSearch: Infinity,
         placeholder: "виберіть об'єкт",
         ajax: {
             type: "Get",
@@ -216,14 +222,16 @@ function forSelect2WithSearchAndPageable(selectId, url, selectedItemId) {
                 };
             },
             processResults: function (data) {
-                var results = Object.keys(data.content).map(function (key) {
-                    return {id: key, text: data.content[key]}
+                var results = data.content.map(obj => {
+                    const key = Object.keys(obj)[0];
+                    const value = obj[key]
+                    return {id: key, text: value};
                 })
                 var hasMore = data.totalPages > data.number
                 return {
                     results: results,
                     pagination: {
-                        more: false
+                        more: hasMore
                     }
                 }
             },
@@ -231,4 +239,14 @@ function forSelect2WithSearchAndPageable(selectId, url, selectedItemId) {
         }
     });
     if (selectedItemId) $(selectId).val(selectedItemId).trigger('change')
+}
+
+function validSelect2(select) {
+    if (!select.val() || (Array.isArray(select.val()) && select.val().length === 0)) {
+        scrollToElement(select)
+        select.next().find(".select2-selection").css("border", "1px solid #ff0000");
+        addText(select.next().find(".select2-selection"), "Елемент має бути вибрано");
+        return false;
+    }
+    return true
 }

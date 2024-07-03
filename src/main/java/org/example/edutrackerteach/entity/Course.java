@@ -34,6 +34,6 @@ public class Course {
     private List<Student> students;
     @OneToMany
     private List<Literature> literatures;
-    @OneToMany
+    @OneToMany(mappedBy = "course")
     private List<Task> tasks;
 }
