@@ -60,4 +60,8 @@ public class CourseServiceImpl implements CourseService {
     public boolean isCourseAssignedToProfessor(long professorId, long courseId) {
         return getById(courseId).getProfessor()!=null  &&  getById(courseId).getProfessor().getId() == professorId;
     }
+    @Override
+    public CourseRequestAdd getByIdForAdd(Integer id) {
+        return courseMapper.toDtoForAdd(getById(id));
+    }
 }

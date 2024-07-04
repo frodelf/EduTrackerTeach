@@ -41,4 +41,12 @@ public class CourseMapper {
         if(requestAdd.getGoal() != null) course.setGoal(requestAdd.getGoal());
         return course;
     }
+    public CourseRequestAdd toDtoForAdd(Course course) {
+        CourseRequestAdd courseRequestAdd = new CourseRequestAdd();
+        courseRequestAdd.setId(course.getId());
+        courseRequestAdd.setName(course.getName());
+        courseRequestAdd.setMaximumMark(course.getMaximumMark());
+        courseRequestAdd.setGoal(course.getGoal());
+        return courseRequestAdd;
+    }
 }

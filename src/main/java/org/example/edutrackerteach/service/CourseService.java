@@ -18,4 +18,5 @@ public interface CourseService {
     Course save(Course course);
     long add(CourseRequestAdd courseRequestAdd, Professor professor) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException;
     boolean isCourseAssignedToProfessor(long professorId, long courseId);
+    CourseRequestAdd getByIdForAdd(Integer id);
 }

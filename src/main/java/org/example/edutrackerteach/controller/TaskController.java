@@ -8,9 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -25,6 +23,11 @@ public class TaskController {
     @GetMapping("/get-all")
     public ResponseEntity<Page<TaskResponseViewAll>> getAll(TaskRequestFilter taskRequestFilter){
         return ResponseEntity.ok(taskService.getAll(taskRequestFilter));
+    }
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> delete(@RequestParam Long taskId){
+        taskService.deleteById(taskId);
+        return ResponseEntity.ok("deleted");
     }
     @ModelAttribute
     public void activeMenuItem(Model model) {

@@ -46,7 +46,7 @@ public class CourseController {
     @GetMapping("/edit/{id}")
     public ModelAndView edit(@PathVariable Integer id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         if(!courseService.isCourseAssignedToProfessor(userDetails.getProfessor().getId(), id))throw new AccessDeniedException("You don't have access to this page");
-        return new ModelAndView("course/edit", "course", courseService.getById(id));
+        return new ModelAndView("course/edit", "course", courseService.getByIdForAdd(id));
     }
     @GetMapping("/get-all")
     public ResponseEntity<Page<CourseResponseViewAll>> getAll(@RequestParam int page, @RequestParam int pageSize, @AuthenticationPrincipal UserDetailsImpl userDetails){
@@ -56,6 +56,7 @@ public class CourseController {
     public ResponseEntity<?> add(@ModelAttribute @Valid CourseRequestAdd courseRequestAdd, @AuthenticationPrincipal UserDetailsImpl userDetails) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         return ResponseEntity.ok(courseService.add(courseRequestAdd, userDetails.getProfessor()));
     }
+    //TODO Багато помилок при видаленні
     @DeleteMapping("/remove")
     public ResponseEntity<String> remove(@RequestParam long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         if(!courseService.isCourseAssignedToProfessor(userDetails.getProfessor().getId(), id))throw new AccessDeniedException("You don't have access to this page");

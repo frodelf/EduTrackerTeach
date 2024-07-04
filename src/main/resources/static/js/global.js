@@ -1,10 +1,20 @@
 var messageForDelete = "Об'єкт успішно видалено"
 var messageForSave = "Об'єкт успішно збережено"
-// $(document).ready(function () {
-//     document.addEventListener('click', function(event) {
-//         console.log(event.target);
-//     });
-// })
+$(document).ready(function () {
+    const inputs = document.querySelectorAll('.for-filter');
+    let timeout = null;
+    inputs.forEach(input => {
+        input.addEventListener('input', function () {
+            clearTimeout(timeout)
+            timeout = setTimeout(() => {
+                getPageWithFilter(0)
+            }, 1000)
+        })
+    })
+    $('.for-filter').on('change', function () {
+        getPageWithFilter(0)
+    })
+})
 function showLoader(blockId) {
     $("#" + blockId).block({
         message: `

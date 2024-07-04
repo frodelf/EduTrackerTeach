@@ -9,4 +9,5 @@ public interface TaskService {
     long countAllOpenTasksByCourseId(long courseId);
     long countAllCloseTasksByCourseId(long courseId);
     Page<TaskResponseViewAll> getAll(TaskRequestFilter taskRequestFilter);
+    void deleteById(Long taskId);
 }

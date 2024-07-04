@@ -1,21 +1,6 @@
 var page = 0
 $(document).ready(function () {
-    const inputs = document.querySelectorAll('.for-filter');
-    let timeout = null;
-    inputs.forEach(input => {
-        input.addEventListener('input', function () {
-            clearTimeout(timeout)
-            timeout = setTimeout(() => {
-                getPageWithFilter(0)
-            }, 1000)
-        })
-    })
-    $('#coursesEl').on('change', function () {
-        getPageWithFilter(0)
-    })
-
     forSelect2("#coursesEl", contextPath + "course/get-for-select")
-
     getPageWithFilter(page)
 })
 
