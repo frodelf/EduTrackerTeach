@@ -195,7 +195,7 @@ function forSelect2(selectId, url, selectedItemId) {
             url: url,
             processResults: function (data) {
                 var results = Object.keys(data).map(function (key) {
-                    return {id: key, text: data[key]};
+                    return {id: key, text: translateTest(data[key])};
                 });
                 return {
                     results: results
@@ -253,4 +253,9 @@ function validSelect2(select) {
         return false;
     }
     return true
+}
+function translateTest(text){
+    if(text=="CLOSE")text="Закрите"
+    if(text=="OPEN")text="Відкрите"
+    return text
 }
