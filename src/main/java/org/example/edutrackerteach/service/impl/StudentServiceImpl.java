@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.edutrackerteach.dto.ForSelect2Dto;
+import org.example.edutrackerteach.dto.StudentResponseForAdd;
 import org.example.edutrackerteach.dto.student.StudentRequestFilter;
 import org.example.edutrackerteach.dto.student.StudentResponseViewAll;
 import org.example.edutrackerteach.dto.student.StudentResponseViewOnePage;
@@ -11,6 +12,7 @@ import org.example.edutrackerteach.entity.Course;
 import org.example.edutrackerteach.entity.Student;
 import org.example.edutrackerteach.mapper.StudentMapper;
 import org.example.edutrackerteach.repository.StudentRepository;
+import org.example.edutrackerteach.service.CourseService;
 import org.example.edutrackerteach.service.StudentService;
 import org.example.edutrackerteach.specification.StudentSpecification;
 import org.springframework.data.domain.*;
@@ -28,6 +30,7 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
+    private final CourseService courseService;
     private final StudentMapper studentMapper = new StudentMapper();
     @Override
     @Transactional
@@ -57,10 +60,6 @@ public class StudentServiceImpl implements StudentService {
         return studentMapper.toDtoListForViewAll(studentRepository.findDistinctByCoursesIn(courseList, pageable));
     }
     @Override
-    public void removeById(Long id) {
-        System.out.println(id);
-    }
-    @Override
     public Page<Map<String, String>> getAllByGroupForSelect(ForSelect2Dto forSelect2Dto) {
         Pageable pageable = PageRequest.of(forSelect2Dto.getPage(), forSelect2Dto.getSize(), Sort.by(Sort.Order.desc("id")));
         Page<String> groups = studentRepository.findAllGroupNamesByGroupNameLikeIgnoreCase(forSelect2Dto.getQuery(), pageable);
@@ -75,5 +74,34 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentResponseViewOnePage getByIdForView(Long id) {
         return studentMapper.toDtoForViewOnePage(getById(id));
+    }
+    @Override
+    public List<StudentResponseForAdd> getAllByGroupAndCourse(String group, Long courseId) {
+        return studentMapper.toDtoForAddList(studentRepository.findAllByGroupName(group), courseId);
+    }
+    @Override
+    @Transactional
+    public void addToCourse(Map<String, String> students, Long courseId) {
+        Course course = courseService.getById(courseId);
+        students.forEach((studentId, value) -> {
+            Student student = getById(Long.parseLong(studentId));
+            if(Boolean.parseBoolean(value)){
+                if(student.getCourses().stream().noneMatch(courseStudent -> courseStudent.getId().equals(courseId)))
+                    course.getStudents().add(student);
+            }
+            else {
+                if(student.getCourses().stream().anyMatch(courseStudent -> courseStudent.getId().equals(courseId)))
+                    course.getStudents().removeIf(studentEl -> studentEl.getId().equals(Long.parseLong(studentId)));
+            }
+            courseService.save(course);
+        });
+    }
+    @Override
+    public void deleteFromCourse(Long studentId, Long courseId) {
+        Course course = courseService.getById(courseId);
+        Student student = getById(studentId);
+        if(student.getCourses().stream().anyMatch(courseStudent -> courseStudent.getId().equals(courseId)))
+            course.getStudents().removeIf(studentEl -> studentEl.getId().equals(studentId));
+        courseService.save(course);
     }
 }

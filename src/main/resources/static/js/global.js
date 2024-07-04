@@ -34,22 +34,26 @@ function hideLoader(blockId) {
 }
 
 function showSuccessToast(message) {
+    toastr.options.closeButton = true
     toastr.options.progressBar = true;
     toastr.success(message)
 }
 
 function showErrorToast(message) {
+    toastr.options.closeButton = true
     toastr.options.progressBar = true;
     toastr.error(message)
 }
 
 function showToastForDelete() {
+    toastr.options.closeButton = true
     toastr.options.progressBar = true;
     toastr.success(messageForDelete)
 }
 
 function showToastForSave() {
     toastr.options.closeButton = true
+    toastr.options.progressBar = true;
     toastr.success(messageForSave)
 }
 

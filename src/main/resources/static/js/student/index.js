@@ -66,14 +66,49 @@ function getPageWithFilter(page) {
                 var cell5 = newRow.insertCell(5);
                 cell5.innerHTML = `
 <a href="${contextPath}student/${object.id}" class="btn btn-outline-secondary float-end"><i class="fa-regular fa-eye"></i></a>
-<button onclick="remove(${object.id})" class="btn btn-outline-primary"><i class="fa-solid fa-trash"></i></button>`;
+<button onclick="showModalForRemove(${object.id})" class="btn btn-outline-primary"><i class="fa-solid fa-trash"></i></button>`;
             }
             $('#pagination_container').empty();
             if (objects.totalPages > 1) updatePagination(page, objects.totalPages, 'pagination_container')
         },
     })
 }
+function showModalForRemove(studentId){
+    if ($('#ModalForRemove').html()) $('#ModalForRemove').remove()
 
+    var modalBlock = document.createElement('div');
+    modalBlock.innerHTML = `
+        <div class="modal fade" id="ModalForRemove" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Курс з якого виключити студента</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Курс
+                        <select id="coursesForRemove"></select>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="float-end btn btn-danger" onclick="removeFromCourse(${studentId})">Вилучити</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modalBlock);
+    $('#ModalForRemove').modal('show');
+    forSelect2("#coursesForRemove", contextPath+"course/get-for-select-by-student/"+studentId)
+}
+function removeFromCourse(studentId){
+    cleanInputs()
+    if (!($("#coursesForRemove").val())) {
+        validSelect2($("#coursesForRemove"))
+        return
+    }
+    remove(studentId, $("#coursesForRemove").val())
+    $('#ModalForRemove').modal('hide')
+}
 function showModalForAddStudentStepFirst() {
     if ($('#ModalForAddStudentStepFirst').html()) $('#ModalForAddStudentStepFirst').remove()
 
@@ -119,13 +154,45 @@ function searchStudent() {
     if(!valid)return
 
     $('#ModalForAddStudentStepFirst').modal('hide');
-    showModalForAddStudentStepSecond()
+    showModalForAddStudentStepSecond($("#groupForStudentAdding").val(), $("#coursesForStudentAdding").val())
 }
-function showModalForAddStudentStepSecond() {
-    if ($('#ModalForAddStudentStepSecond').html()) $('#ModalForAddStudentStepSecond').remove()
+function remove(studentId, courseId) {
+    $.ajax({
+        url: contextPath + 'student/delete-from-course',
+        type: 'DELETE',
+        headers: {'X-XSRF-TOKEN': csrf_token},
+        data: {
+            studentId: studentId,
+            courseId: courseId
+        },
+        success: function (request) {
+            getPageWithFilter(page)
+            showToastForDelete()
+        },
+    })
+}
+function activateAllCheckbox(checkbox) {
+        if (checkbox.checked) {
+            console.log("asd")
+            $(".for-student-adding").prop('checked', true);
+        } else {
+            console.log("asdddddd")
+            $(".for-student-adding").prop('checked', false);
+        }
+}
+function showModalForAddStudentStepSecond(group, courseId) {
+    $.ajax({
+        url: contextPath + 'student/get-all-by-group-and-course',
+        data: {
+            group: group,
+            courseId: courseId
+        },
+        success: function (students) {
+            console.log(students)
+            if ($('#ModalForAddStudentStepSecond').html()) $('#ModalForAddStudentStepSecond').remove()
 
-    var modalBlock = document.createElement('div');
-    modalBlock.innerHTML = `
+            var modalBlock = document.createElement('div');
+            modalBlock.innerHTML = `
         <div class="modal fade" id="ModalForAddStudentStepSecond" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -137,10 +204,13 @@ function showModalForAddStudentStepSecond() {
                         <div class="card">
                             <div class="card-header">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-hover table-striped linkedRow" id="courseTable"
-                                           style="table-layout: fixed;">
+                                    <table class="table table-bordered table-hover table-striped linkedRow"
+                                           id="tableForStudentAdd" style="table-layout: fixed;">
                                         <thead>
                                         <tr>
+                                        <th>Група</th>
+                                        <th>Назва</th>
+                                        <th><center><input type="checkbox" onclick="activateAllCheckbox(this)" class="form-check-input"></center></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -154,26 +224,55 @@ function showModalForAddStudentStepSecond() {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="float-end btn btn-primary">Додати</button>
+                        <button class="float-end btn btn-primary" onclick="addStudentToCourse(${courseId})">Додати</button>
                     </div>
                 </div>
             </div>
         </div>
-    `;
-    document.body.appendChild(modalBlock);
-    $('#ModalForAddStudentStepSecond').modal('show');
-}
-function remove(id) {
-    $.ajax({
-        url: contextPath + 'student/remove',
-        type: 'DELETE',
-        headers: {'X-XSRF-TOKEN': csrf_token},
-        data: {
-            id: id,
-        },
-        success: function (request) {
-            getPageWithFilter(page)
-            showToastForDelete()
+    `
+            document.body.appendChild(modalBlock)
+            $('#ModalForAddStudentStepSecond').modal('show')
+
+            var table = document.getElementById("tableForStudentAdd")
+            var tbody = table.querySelector("tbody")
+            $('#tableForStudentAdd tbody').empty()
+            for (const student of students) {
+                var newRow = tbody.insertRow()
+                var cell0 = newRow.insertCell(0)
+                cell0.innerHTML = `${student.groupName}`
+
+                var cell1 = newRow.insertCell(1)
+                cell1.innerHTML = `<a href="${contextPath}student/${student.id}">${student.fullName}</a>`
+
+                var cell2 = newRow.insertCell(2)
+                cell2.innerHTML = `<center><input type="checkbox" id="student${student.id}" class="form-check-input for-student-adding" ${student.present == true ? 'checked'  : ''}></center>`
+            }
         },
     })
+}
+function addStudentToCourse(courseId) {
+    var formData = new FormData();
+    document.querySelectorAll('.for-student-adding').forEach(function(input) {
+        var studentId = input.id.replace("student", "");
+        formData.append(studentId, input.checked);
+    });
+
+    formData.append("courseId", courseId);
+
+    $.ajax({
+        url: contextPath + 'student/add-to-course',
+        type: 'POST',
+        headers: {'X-XSRF-TOKEN': csrf_token},
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function () {
+            showToastForSave()
+            $('#ModalForAddStudentStepSecond').modal('hide')
+            getPageWithFilter(page)
+        },
+        error: function (error) {
+            console.error('Error:', error);
+        }
+    });
 }

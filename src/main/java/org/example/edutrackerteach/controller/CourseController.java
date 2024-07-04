@@ -95,6 +95,7 @@ public class CourseController {
             if(student.getCourses().stream().anyMatch(courseStudent -> courseStudent.getId().equals(course.getId())))
                 forSelect.put(course.getId().toString(), course.getName());
         }
+
         return ResponseEntity.ok(forSelect);
     }
     @ModelAttribute

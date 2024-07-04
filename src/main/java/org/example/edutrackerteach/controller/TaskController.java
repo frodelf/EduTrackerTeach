@@ -5,17 +5,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequiredArgsConstructor
-public class StatisticController {
+@RequestMapping("/task")
+public class TaskController {
     @GetMapping({"", "/"})
-    public ModelAndView index(){
-        return new ModelAndView("statistic/index");
+    public ModelAndView index() {
+        return new ModelAndView("task/index");
     }
     @ModelAttribute
     public void activeMenuItem(Model model) {
-        model.addAttribute("statisticActive", true);
+        model.addAttribute("taskActive", true);
     }
 }

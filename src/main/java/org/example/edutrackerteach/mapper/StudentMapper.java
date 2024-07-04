@@ -1,5 +1,6 @@
 package org.example.edutrackerteach.mapper;
 
+import org.example.edutrackerteach.dto.StudentResponseForAdd;
 import org.example.edutrackerteach.dto.student.StudentResponseViewAll;
 import org.example.edutrackerteach.dto.student.StudentResponseViewOnePage;
 import org.example.edutrackerteach.entity.Course;
@@ -7,7 +8,9 @@ import org.example.edutrackerteach.entity.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class StudentMapper {
@@ -46,5 +49,21 @@ public class StudentMapper {
         if(student.getTelegram() != null)studentResponseViewOnePage.setTelegram(student.getTelegram());
         if(student.getGroupName() != null)studentResponseViewOnePage.setGroupName(student.getGroupName());
         return studentResponseViewOnePage;
+    }
+    public List<StudentResponseForAdd> toDtoForAddList(List<Student> allByGroupName, Long courseId) {
+        List<StudentResponseForAdd> res = new ArrayList<>();
+        for (Student student : allByGroupName) {
+            res.add(toDtoForAdd(student, courseId));
+        }
+        return res;
+    }
+    public StudentResponseForAdd toDtoForAdd(Student student, Long courseId) {
+        StudentResponseForAdd studentResponseForAdd = new StudentResponseForAdd();
+        studentResponseForAdd.setId(student.getId());
+        studentResponseForAdd.setGroupName(student.getGroupName());
+        studentResponseForAdd.setGroupName(student.getGroupName());
+        studentResponseForAdd.setFullName(student.getLastName()+" "+student.getName());
+        studentResponseForAdd.setPresent(student.getCourses().stream().anyMatch(courseStudent -> courseStudent.getId().equals(courseId)));
+        return studentResponseForAdd;
     }
 }

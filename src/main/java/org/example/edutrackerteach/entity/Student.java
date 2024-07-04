@@ -16,7 +16,7 @@ import java.util.List;
 public class Student extends User {
     @Column(length = 100)
     private String groupName;
-    @ManyToMany(mappedBy = "students", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "students", cascade = {CascadeType.ALL, CascadeType.PERSIST})
     @JsonBackReference
     private List<Course> courses;
 }

@@ -16,4 +16,5 @@ public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpec
     Page<Student> findDistinctByCoursesIn(List<Course> courses, Pageable pageable);
     @Query("SELECT DISTINCT s.groupName FROM Student s WHERE LOWER(s.groupName) LIKE LOWER(CONCAT('%', :groupName, '%'))")
     Page<String> findAllGroupNamesByGroupNameLikeIgnoreCase(@Param("groupName") String groupName, Pageable pageable);
+    List<Student> findAllByGroupName(String groupName);
 }

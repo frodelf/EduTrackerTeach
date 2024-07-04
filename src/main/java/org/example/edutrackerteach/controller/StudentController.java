@@ -2,6 +2,7 @@ package org.example.edutrackerteach.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.edutrackerteach.dto.ForSelect2Dto;
+import org.example.edutrackerteach.dto.StudentResponseForAdd;
 import org.example.edutrackerteach.dto.student.StudentRequestFilter;
 import org.example.edutrackerteach.dto.student.StudentResponseViewAll;
 import org.example.edutrackerteach.entity.Course;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Objects.nonNull;
@@ -32,7 +34,7 @@ public class StudentController {
     private final CourseService courseService;
     private final StudentsTaskService studentsTaskService;
     private final ReviewService reviewService;
-    @GetMapping
+    @GetMapping({"", "/"})
     public ModelAndView index() {
         return new ModelAndView("student/index");
     }
@@ -44,11 +46,6 @@ public class StudentController {
     public ResponseEntity<Page<StudentResponseViewAll>> getAll(@ModelAttribute StudentRequestFilter studentRequestFilter, @AuthenticationPrincipal UserDetailsImpl userDetails){
         Page<StudentResponseViewAll> res = studentService.getAllByCourseList(studentRequestFilter.getPage(), studentRequestFilter.getPageSize(), userDetails.getProfessor().getCourses(), studentRequestFilter);
         return ResponseEntity.ok(studentService.getAllByCourseList(studentRequestFilter.getPage(), studentRequestFilter.getPageSize(), userDetails.getProfessor().getCourses(), studentRequestFilter));
-    }
-    @DeleteMapping("/remove")
-    public ResponseEntity<String> remove(@RequestParam Long id){
-        studentService.removeById(id);
-        return ResponseEntity.ok("deleted");
     }
     @GetMapping("/get-group-for-select")
     public ResponseEntity<Page<Map<String, String>>> getGroupForSelect(@ModelAttribute ForSelect2Dto forSelect2Dto, @AuthenticationPrincipal UserDetailsImpl userDetails){
@@ -75,6 +72,21 @@ public class StudentController {
         }
         map.put("withCourse", String.valueOf(nonNull(courseId)));
         return ResponseEntity.ok(map);
+    }
+    @GetMapping("/get-all-by-group-and-course")
+    public ResponseEntity<List<StudentResponseForAdd>> getAllByGroupAndCourse(@RequestParam String group, @RequestParam Long courseId){
+        return ResponseEntity.ok(studentService.getAllByGroupAndCourse(group, courseId));
+    }
+    @PostMapping("/add-to-course")
+    public ResponseEntity<String> addToCourse(@RequestParam Map<String, String> students, @RequestParam Long courseId){
+        students.remove("courseId");
+        studentService.addToCourse(students, courseId);
+        return ResponseEntity.ok("saved");
+    }
+    @DeleteMapping("/delete-from-course")
+    public ResponseEntity<String> deleteFromCourse(@RequestParam Long studentId, @RequestParam Long courseId){
+        studentService.deleteFromCourse(studentId, courseId);
+        return ResponseEntity.ok("deleted");
     }
     @ModelAttribute
     public void activeMenuItem(Model model) {
