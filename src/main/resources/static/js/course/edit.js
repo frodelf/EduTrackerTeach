@@ -115,7 +115,6 @@ function save() {
         },
         complete: function (xhr, status) {
             hideLoader("content-form")
-            console.log('Запит завершено');
         }
     })
 }

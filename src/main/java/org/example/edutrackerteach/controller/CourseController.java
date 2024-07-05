@@ -3,7 +3,7 @@ package org.example.edutrackerteach.controller;
 import io.minio.errors.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.edutrackerteach.dto.course.CourseRequestAdd;
+import org.example.edutrackerteach.dto.course.CourseDtoForAdd;
 import org.example.edutrackerteach.dto.course.CourseResponseViewAll;
 import org.example.edutrackerteach.entity.Course;
 import org.example.edutrackerteach.entity.Student;
@@ -53,8 +53,8 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getAll(page, pageSize, userDetails.getProfessor().getId()));
     }
     @PostMapping("/add")
-    public ResponseEntity<?> add(@ModelAttribute @Valid CourseRequestAdd courseRequestAdd, @AuthenticationPrincipal UserDetailsImpl userDetails) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-        return ResponseEntity.ok(courseService.add(courseRequestAdd, userDetails.getProfessor()));
+    public ResponseEntity<?> add(@ModelAttribute @Valid CourseDtoForAdd courseDtoForAdd, @AuthenticationPrincipal UserDetailsImpl userDetails) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        return ResponseEntity.ok(courseService.add(courseDtoForAdd, userDetails.getProfessor()));
     }
     //TODO Багато помилок при видаленні
     @DeleteMapping("/remove")
@@ -96,7 +96,6 @@ public class CourseController {
             if(student.getCourses().stream().anyMatch(courseStudent -> courseStudent.getId().equals(course.getId())))
                 forSelect.put(course.getId().toString(), course.getName());
         }
-
         return ResponseEntity.ok(forSelect);
     }
     @ModelAttribute

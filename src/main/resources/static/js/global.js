@@ -197,7 +197,7 @@ $(document).ready(function () {
     });
 })
 
-function forSelect2(selectId, url, selectedItemId) {
+function forSelect2(selectId, url, id, text) {
     $(selectId).select2({
         placeholder: "виберіть об'єкт",
         ajax: {
@@ -214,9 +214,11 @@ function forSelect2(selectId, url, selectedItemId) {
         },
         minimumResultsForSearch: Infinity
     })
-    if (selectedItemId) $(selectId).val(selectedItemId).trigger('change')
+    if (text && id) {
+        $(selectId).append(new Option(text.toString(), id.toString(), true, true));
+        $(selectId).trigger('change');
+    }
 }
-
 function forSelect2WithSearchAndPageable(selectId, url, selectedItemId) {
     $(selectId).select2({
         //TODO доробити пошук

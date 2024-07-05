@@ -4,7 +4,7 @@ import io.minio.errors.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.edutrackerteach.dto.course.CourseRequestAdd;
+import org.example.edutrackerteach.dto.course.CourseDtoForAdd;
 import org.example.edutrackerteach.dto.course.CourseResponseViewAll;
 import org.example.edutrackerteach.entity.Course;
 import org.example.edutrackerteach.entity.Professor;
@@ -50,9 +50,9 @@ public class CourseServiceImpl implements CourseService {
     }
     @Override
     @Transactional
-    public long add(CourseRequestAdd courseRequestAdd, Professor professor) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-        Course course = courseMapper.toEntityForAdd(courseRequestAdd, this);
-        if(courseRequestAdd.getImage() != null)course.setImage(minioService.putMultipartFile(courseRequestAdd.getImage()));
+    public long add(CourseDtoForAdd courseDtoForAdd, Professor professor) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        Course course = courseMapper.toEntityForAdd(courseDtoForAdd, this);
+        if(courseDtoForAdd.getImage() != null)course.setImage(minioService.putMultipartFile(courseDtoForAdd.getImage()));
         if(professor!=null)course.setProfessor(professor);
         return save(course).getId();
     }
@@ -61,7 +61,7 @@ public class CourseServiceImpl implements CourseService {
         return getById(courseId).getProfessor()!=null  &&  getById(courseId).getProfessor().getId() == professorId;
     }
     @Override
-    public CourseRequestAdd getByIdForAdd(Integer id) {
+    public CourseDtoForAdd getByIdForAdd(Integer id) {
         return courseMapper.toDtoForAdd(getById(id));
     }
 }

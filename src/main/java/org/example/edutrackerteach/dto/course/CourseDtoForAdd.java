@@ -6,7 +6,7 @@ import org.example.edutrackerteach.validation.ImageExtension;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class CourseRequestAdd {
+public class CourseDtoForAdd {
     private Long id;
     @NotBlank(message = "{error.field.empty}")
     @Size(max = 100, message = "{error.field.size.max}")

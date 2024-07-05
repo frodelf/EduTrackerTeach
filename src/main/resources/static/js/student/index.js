@@ -59,11 +59,11 @@ function getPageWithFilter(page) {
     })
 }
 function showModalForRemove(studentId){
-    if ($('#ModalForRemove').html()) $('#ModalForRemove').remove()
+    if ($('#modalForRemove').html()) $('#modalForRemove').remove()
 
     var modalBlock = document.createElement('div');
     modalBlock.innerHTML = `
-        <div class="modal fade" id="ModalForRemove" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="modalForRemove" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -82,7 +82,7 @@ function showModalForRemove(studentId){
         </div>
     `;
     document.body.appendChild(modalBlock);
-    $('#ModalForRemove').modal('show');
+    $('#modalForRemove').modal('show');
     forSelect2("#coursesForRemove", contextPath+"course/get-for-select-by-student/"+studentId)
 }
 function removeFromCourse(studentId){
@@ -202,9 +202,6 @@ function showModalForAddStudentStepSecond(group, courseId) {
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-                            <div class="card-header">
-                                
                             </div>
                         </div>
                     </div>

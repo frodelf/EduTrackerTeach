@@ -1,7 +1,7 @@
 package org.example.edutrackerteach.mapper;
 
 import lombok.SneakyThrows;
-import org.example.edutrackerteach.dto.course.CourseRequestAdd;
+import org.example.edutrackerteach.dto.course.CourseDtoForAdd;
 import org.example.edutrackerteach.dto.course.CourseResponseViewAll;
 import org.example.edutrackerteach.entity.Course;
 import org.example.edutrackerteach.service.CourseService;
@@ -33,7 +33,7 @@ public class CourseMapper {
                 courses.getTotalElements()
         );
     }
-    public Course toEntityForAdd(CourseRequestAdd requestAdd, CourseService courseService) {
+    public Course toEntityForAdd(CourseDtoForAdd requestAdd, CourseService courseService) {
         Course course = new Course();
         if(requestAdd.getId() != null) course = courseService.getById(requestAdd.getId());
         if(requestAdd.getName() != null) course.setName(requestAdd.getName());
@@ -41,12 +41,12 @@ public class CourseMapper {
         if(requestAdd.getGoal() != null) course.setGoal(requestAdd.getGoal());
         return course;
     }
-    public CourseRequestAdd toDtoForAdd(Course course) {
-        CourseRequestAdd courseRequestAdd = new CourseRequestAdd();
-        courseRequestAdd.setId(course.getId());
-        courseRequestAdd.setName(course.getName());
-        courseRequestAdd.setMaximumMark(course.getMaximumMark());
-        courseRequestAdd.setGoal(course.getGoal());
-        return courseRequestAdd;
+    public CourseDtoForAdd toDtoForAdd(Course course) {
+        CourseDtoForAdd courseDtoForAdd = new CourseDtoForAdd();
+        courseDtoForAdd.setId(course.getId());
+        courseDtoForAdd.setName(course.getName());
+        courseDtoForAdd.setMaximumMark(course.getMaximumMark());
+        courseDtoForAdd.setGoal(course.getGoal());
+        return courseDtoForAdd;
     }
 }
