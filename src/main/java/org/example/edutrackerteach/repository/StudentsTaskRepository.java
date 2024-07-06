@@ -3,11 +3,12 @@ package org.example.edutrackerteach.repository;
 import org.example.edutrackerteach.entity.StudentsTask;
 import org.example.edutrackerteach.entity.enums.StatusStudentsTask;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface StudentsTaskRepository extends JpaRepository<StudentsTask, Long> {
+public interface StudentsTaskRepository extends JpaRepository<StudentsTask, Long>, JpaSpecificationExecutor<StudentsTask> {
     @Query("SELECT COALESCE(COUNT(st), 0) FROM StudentsTask st WHERE st.status IN (:statuses) AND st.student.id = :studentId")
     Long countByStatusesAndStudentId(Long studentId, List<StatusStudentsTask> statuses);
     @Query("SELECT COALESCE(COUNT(st), 0) FROM StudentsTask st WHERE st.status IN (:statuses) AND st.student.id = :studentId AND st.task.course.id = :courseId")

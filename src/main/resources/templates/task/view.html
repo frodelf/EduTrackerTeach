@@ -26,17 +26,56 @@
         </nav>
     </div>
     <hr style="margin-top: 0"/>
+    <h2 id="course">
+    </h2>
     <div class="row mt-4">
-        <img th:src="@{/img/default.png}" alt="" class="mb-4" style="max-width: 10%">
+        <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6" th:inline="javascript">
+            <h3>Файл з завданням</h3>
+            <button class="btn" onclick="downloadFileFrom()">
+                <img th:src="@{/img/default-file-download.png}" alt="" class="mb-4">
+            </button>
+        </div>
+        <div class="col-xl-9 col-lg-8 col-md-7 col-sm-6"></div>
     </div>
     <center><h2>Студенти</h2></center>
     <hr style="margin-top: 0"/>
     <div class="card">
-        <div class="card-content">
-
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped linkedRow" id="userTable"
+                       style="    table-layout: fixed;">
+                    <thead>
+                    <tr>
+                        <th style="width: 100px">Група</th>
+                        <th style="width: 200px">Студент</th>
+                        <th style="width: 200px">Телеграм</th>
+                        <th style="width: 200px">Статус</th>
+                        <th style="width: 100px">Оцінка</th>
+                    </tr>
+                    <tr>
+                        <th><input class="form-control for-filter"></th>
+                        <th><input class="form-control for-filter"></th>
+                        <th><input class="form-control for-filter"></th>
+                        <th>
+                            <select id="statusEl" class="for-filter">
+                                <option></option>
+                                <option value="IN_PROCESS">В процесі</option>
+                                <option value="GRANTED">Здано</option>
+                                <option value="EVALUATED">Оцінено</option>
+                            </select>
+                        </th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="card-footer">
-
+            <ul class="pagination pagination-sm m-0 mt-1" style="display: flex; justify-content: flex-end"
+                id="pagination_container">
+            </ul>
         </div>
     </div>
 </section>

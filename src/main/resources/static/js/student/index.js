@@ -5,6 +5,7 @@ $(document).ready(function () {
 })
 
 function getPageWithFilter(page) {
+    showLoader('userTable')
     this.page = page
     var filterElements = $('.for-filter');
     $.ajax({
@@ -12,7 +13,7 @@ function getPageWithFilter(page) {
         url: contextPath + 'student/get-all',
         data: {
             page: page,
-            pageSize: 1,
+            pageSize: pageSize,
             group: filterElements[0].value,
             fullName: filterElements[1].value,
             course: filterElements[2].value,
@@ -20,9 +21,15 @@ function getPageWithFilter(page) {
             phone: filterElements[4].value,
         },
         success: function (objects) {
-            var table = document.getElementById("courseTable");
+            var table = document.getElementById("userTable");
             var tbody = table.querySelector("tbody");
-            $('#courseTable tbody').empty();
+            $('#userTable tbody').empty();
+            if($("#message-about-empty"))$("#message-about-empty").remove()
+            if(objects.content.length == 0){
+                table.insertAdjacentHTML('afterend', '<center><h1 id="message-about-empty">Немає даних для відображення</h1></center>')
+                $('#pagination_container').empty()
+                return
+            }
             for (var object of objects.content) {
                 var newRow = tbody.insertRow();
                 var cell0 = newRow.insertCell(0);
@@ -56,6 +63,9 @@ function getPageWithFilter(page) {
             $('#pagination_container').empty();
             if (objects.totalPages > 1) updatePagination(page, objects.totalPages, 'pagination_container')
         },
+        complete: function (xhr, status) {
+            hideLoader("userTable")
+        }
     })
 }
 function showModalForRemove(studentId){

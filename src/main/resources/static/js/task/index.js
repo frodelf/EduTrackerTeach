@@ -6,6 +6,7 @@ $(document).ready(function () {
 })
 
 function getPageWithFilter(page) {
+    showLoader('taskTable')
     this.page = page
     var filterElements = $('.for-filter');
     $.ajax({
@@ -13,7 +14,7 @@ function getPageWithFilter(page) {
         url: contextPath + 'task/get-all',
         data: {
             page: page,
-            pageSize: 1,
+            pageSize: pageSize,
             name: filterElements[0].value,
             courseId: filterElements[1].value,
             status: filterElements[2].value
@@ -22,6 +23,12 @@ function getPageWithFilter(page) {
             var table = document.getElementById("taskTable");
             var tbody = table.querySelector("tbody");
             $('#taskTable tbody').empty();
+            if($("#message-about-empty"))$("#message-about-empty").remove()
+            if(objects.content.length == 0){
+                table.insertAdjacentHTML('afterend', '<center><h1 id="message-about-empty">Немає даних для відображення</h1></center>')
+                $('#pagination_container').empty()
+                return
+            }
             for (var object of objects.content) {
                 var newRow = tbody.insertRow();
                 var cell0 = newRow.insertCell(0);
@@ -53,6 +60,9 @@ function getPageWithFilter(page) {
             $('#pagination_container').empty();
             if (objects.totalPages > 1) updatePagination(page, objects.totalPages, 'pagination_container')
         },
+        complete: function (xhr, status) {
+            hideLoader("taskTable")
+        }
     })
 }
 

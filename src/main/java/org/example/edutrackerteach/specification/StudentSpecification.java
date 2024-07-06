@@ -9,9 +9,10 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentSpecification  implements Specification<Student> {
+public class StudentSpecification implements Specification<Student> {
     private StudentRequestFilter studentRequestFilter;
     private List<Course> courses;
+
     public StudentSpecification(StudentRequestFilter studentRequestFilter) {
         this.studentRequestFilter = studentRequestFilter;
     }
@@ -27,22 +28,24 @@ public class StudentSpecification  implements Specification<Student> {
         if (!studentRequestFilter.getGroup().isEmpty()) {
             predicates.add(criteriaBuilder.like(root.get("groupName"), "%" + studentRequestFilter.getGroup() + "%"));
         }
-        if(!studentRequestFilter.getFullName().isEmpty()){
-            criteriaBuilder.like(
-                    criteriaBuilder.concat(
+        if (!studentRequestFilter.getFullName().isEmpty()) {
+            predicates.add(
+                    criteriaBuilder.like(
                             criteriaBuilder.concat(
                                     criteriaBuilder.concat(
-                                            criteriaBuilder.lower(root.get("lastName")),
-                                            " "
+                                            criteriaBuilder.concat(
+                                                    criteriaBuilder.lower(root.get("lastName")),
+                                                    " "
+                                            ),
+                                            criteriaBuilder.lower(root.get("name"))
                                     ),
-                                    criteriaBuilder.lower(root.get("name"))
+                                    criteriaBuilder.concat(
+                                            " ",
+                                            criteriaBuilder.lower(root.get("middleName"))
+                                    )
                             ),
-                            criteriaBuilder.concat(
-                                    " ",
-                                    criteriaBuilder.lower(root.get("middleName"))
-                            )
-                    ),
-                    "%" + studentRequestFilter.getFullName().toLowerCase() + "%"
+                            "%" + studentRequestFilter.getFullName().toLowerCase() + "%"
+                    )
             );
         }
         if (!studentRequestFilter.getTelegram().isEmpty()) {
@@ -54,8 +57,7 @@ public class StudentSpecification  implements Specification<Student> {
         if (studentRequestFilter.getCourse() != null) {
             Join<Student, Course> courseJoin = root.join("courses", JoinType.INNER);
             predicates.add(criteriaBuilder.equal(courseJoin.get("id"), studentRequestFilter.getCourse()));
-        }
-        else {
+        } else {
             Join<Student, Course> coursesJoin = root.join("courses");
             predicates.add(coursesJoin.in(courses));
         }

@@ -2,13 +2,14 @@ var page = 0
 getPageWithFilter(page)
 
 function getPageWithFilter(page) {
+    showLoader('courses')
     this.page = page
     $.ajax({
         type: "Get",
         url: contextPath + 'course/get-all',
         data: {
             page: page,
-            pageSize: 6
+            pageSize: pageSize
         },
         success: function (courses) {
             var content = ``
@@ -26,6 +27,9 @@ function getPageWithFilter(page) {
                 }
             }
         },
+        complete: function (xhr, status) {
+            hideLoader("courses")
+        }
     })
 }
 

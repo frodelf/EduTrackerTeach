@@ -14,8 +14,8 @@ public class StudentsTask {
     @Column(length = 100)
     private String myWork;
     private StatusStudentsTask status;
-    @OneToOne
+    @ManyToOne
     private Student student;
-    @OneToOne
+    @ManyToOne
     private Task task;
 }

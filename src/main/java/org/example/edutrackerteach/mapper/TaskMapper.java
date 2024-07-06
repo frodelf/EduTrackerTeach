@@ -50,6 +50,8 @@ public class TaskMapper {
         TaskResponseForView taskResponseForView = new TaskResponseForView();
         taskResponseForView.setId(task.getId());
         taskResponseForView.setName(task.getName());
+        taskResponseForView.setFile(task.getFile());
+        if(task.getCourse()!=null)taskResponseForView.setCourse(Collections.singletonMap(task.getCourse().getId().toString(), task.getCourse().getName()));
         return taskResponseForView;
     }
 }

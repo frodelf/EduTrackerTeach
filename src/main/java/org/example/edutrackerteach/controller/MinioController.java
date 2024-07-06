@@ -22,4 +22,8 @@ public class MinioController {
     public ResponseEntity<String> getImageUrl(@RequestParam String imageName) throws ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, IOException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         return ResponseEntity.ok(minioService.getUrl(imageName));
     }
+    @GetMapping("/download")
+    public ResponseEntity<byte[]> download(@RequestParam String fileName) throws ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, IOException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        return ResponseEntity.ok(minioService.getPhoto(fileName));
+    }
 }

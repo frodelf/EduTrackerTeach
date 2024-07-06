@@ -10,8 +10,8 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Boolean present;
-    @OneToOne
+    @ManyToOne
     private Student student;
-    @OneToOne
+    @ManyToOne
     private Lesson lesson;
 }

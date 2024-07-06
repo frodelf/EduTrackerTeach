@@ -1,5 +1,6 @@
 var messageForDelete = "Об'єкт успішно видалено"
 var messageForSave = "Об'єкт успішно збережено"
+var pageSize = 1
 $(document).ready(function () {
     const inputs = document.querySelectorAll('.for-filter');
     let timeout = null;
@@ -196,7 +197,12 @@ $(document).ready(function () {
         });
     });
 })
-
+function toSelect2(selectId){
+    $(selectId).select2({
+        placeholder: "Виберіть об'єкт",
+        minimumResultsForSearch: Infinity
+    })
+}
 function forSelect2(selectId, url, id, text) {
     $(selectId).select2({
         placeholder: "виберіть об'єкт",
