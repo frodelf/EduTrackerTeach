@@ -7,4 +7,6 @@ public interface ProfessorService {
     long count();
     Professor getByEmailForAuth(String username);
     Professor getById(long id);
+    Professor getByEmail(String email);
+    Professor getAuthProfessor();
 }

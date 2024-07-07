@@ -1,20 +1,19 @@
 package org.example.edutrackerteach.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.edutrackerteach.dto.ForSelect2Dto;
-import org.example.edutrackerteach.dto.StudentResponseForAdd;
+import org.example.edutrackerteach.dto.student.StudentResponseForAdd;
 import org.example.edutrackerteach.dto.student.StudentRequestFilter;
 import org.example.edutrackerteach.dto.student.StudentResponseViewAll;
 import org.example.edutrackerteach.entity.Course;
 import org.example.edutrackerteach.entity.Student;
-import org.example.edutrackerteach.entity.UserDetailsImpl;
 import org.example.edutrackerteach.service.CourseService;
 import org.example.edutrackerteach.service.ReviewService;
 import org.example.edutrackerteach.service.StudentService;
 import org.example.edutrackerteach.service.StudentsTaskService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -43,12 +42,11 @@ public class StudentController {
         return new ModelAndView("student/view", "student", studentService.getByIdForView(id));
     }
     @GetMapping("/get-all")
-    public ResponseEntity<Page<StudentResponseViewAll>> getAll(@ModelAttribute StudentRequestFilter studentRequestFilter, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        Page<StudentResponseViewAll> res = studentService.getAllByCourseList(studentRequestFilter.getPage(), studentRequestFilter.getPageSize(), userDetails.getProfessor().getCourses(), studentRequestFilter);
-        return ResponseEntity.ok(studentService.getAllByCourseList(studentRequestFilter.getPage(), studentRequestFilter.getPageSize(), userDetails.getProfessor().getCourses(), studentRequestFilter));
+    public ResponseEntity<Page<StudentResponseViewAll>> getAll(@ModelAttribute @Valid StudentRequestFilter studentRequestFilter){
+        return ResponseEntity.ok(studentService.getAllByCourseList(studentRequestFilter.getPage(), studentRequestFilter.getPageSize(), studentRequestFilter));
     }
     @GetMapping("/get-group-for-select")
-    public ResponseEntity<Page<Map<String, String>>> getGroupForSelect(@ModelAttribute ForSelect2Dto forSelect2Dto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<Page<Map<String, String>>> getGroupForSelect(@ModelAttribute ForSelect2Dto forSelect2Dto){
         return ResponseEntity.ok(studentService.getAllByGroupForSelect(forSelect2Dto));
     }
     @GetMapping("/statistic")
@@ -80,12 +78,12 @@ public class StudentController {
     @PostMapping("/add-to-course")
     public ResponseEntity<String> addToCourse(@RequestParam Map<String, String> students, @RequestParam Long courseId){
         students.remove("courseId");
-        studentService.addToCourse(students, courseId);
+        courseService.addStudentToCourse(students, courseId);
         return ResponseEntity.ok("saved");
     }
     @DeleteMapping("/delete-from-course")
     public ResponseEntity<String> deleteFromCourse(@RequestParam Long studentId, @RequestParam Long courseId){
-        studentService.deleteFromCourse(studentId, courseId);
+        courseService.removeStudentFromCourse(studentId, courseId);
         return ResponseEntity.ok("deleted");
     }
     @ModelAttribute

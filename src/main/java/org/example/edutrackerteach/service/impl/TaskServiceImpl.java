@@ -51,13 +51,15 @@ public class TaskServiceImpl implements TaskService {
     }
     @Override
     public void deleteById(Long taskId) {
-        taskRepository.deleteById(taskId);
+        taskRepository.delete(getById(taskId));
     }
     @Override
     public Task getById(Long taskId) {
-        return taskRepository.findById(taskId).orElseThrow(
+        Task task = taskRepository.findById(taskId).orElseThrow(
                 () -> new EntityNotFoundException("Task with id = "+taskId+" not found")
         );
+        courseService.isCourseAssignedToProfessor(task.getCourse().getId());
+        return task;
     }
     @Override
     public TaskResponseForAdd getByIdForAdd(Long taskId) {

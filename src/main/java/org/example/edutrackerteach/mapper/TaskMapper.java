@@ -17,7 +17,7 @@ public class TaskMapper {
     public Page<TaskResponseViewAll> toDtoListForViewAll(Page<Task> tasks) {
         return new PageImpl<>(
                 tasks.getContent().stream()
-                        .map(task -> toDtoForViewAll(task))
+                        .map(this::toDtoForViewAll)
                         .collect(Collectors.toList()),
                 tasks.getPageable(),
                 tasks.getTotalElements()

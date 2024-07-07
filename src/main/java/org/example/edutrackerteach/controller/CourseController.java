@@ -6,16 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.example.edutrackerteach.dto.course.CourseDtoForAdd;
 import org.example.edutrackerteach.dto.course.CourseResponseViewAll;
 import org.example.edutrackerteach.entity.Course;
-import org.example.edutrackerteach.entity.Student;
-import org.example.edutrackerteach.entity.UserDetailsImpl;
 import org.example.edutrackerteach.service.CourseService;
 import org.example.edutrackerteach.service.LessonService;
-import org.example.edutrackerteach.service.StudentService;
 import org.example.edutrackerteach.service.TaskService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +27,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CourseController {
     private final CourseService courseService;
-    private final StudentService studentService;
     private final LessonService lessonService;
     private final TaskService taskService;
     @GetMapping
@@ -44,28 +38,25 @@ public class CourseController {
         return new ModelAndView("course/edit");
     }
     @GetMapping("/edit/{id}")
-    public ModelAndView edit(@PathVariable Integer id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(!courseService.isCourseAssignedToProfessor(userDetails.getProfessor().getId(), id))throw new AccessDeniedException("You don't have access to this page");
+    public ModelAndView edit(@PathVariable Long id) {
         return new ModelAndView("course/edit", "course", courseService.getByIdForAdd(id));
     }
     @GetMapping("/get-all")
-    public ResponseEntity<Page<CourseResponseViewAll>> getAll(@RequestParam int page, @RequestParam int pageSize, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseEntity.ok(courseService.getAll(page, pageSize, userDetails.getProfessor().getId()));
+    public ResponseEntity<Page<CourseResponseViewAll>> getAll(@RequestParam int page, @RequestParam int pageSize){
+        return ResponseEntity.ok(courseService.getAll(page, pageSize));
     }
     @PostMapping("/add")
-    public ResponseEntity<?> add(@ModelAttribute @Valid CourseDtoForAdd courseDtoForAdd, @AuthenticationPrincipal UserDetailsImpl userDetails) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-        return ResponseEntity.ok(courseService.add(courseDtoForAdd, userDetails.getProfessor()));
+    public ResponseEntity<?> add(@ModelAttribute @Valid CourseDtoForAdd courseDtoForAdd) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        return ResponseEntity.ok(courseService.add(courseDtoForAdd));
     }
     //TODO Багато помилок при видаленні
     @DeleteMapping("/remove")
-    public ResponseEntity<String> remove(@RequestParam long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(!courseService.isCourseAssignedToProfessor(userDetails.getProfessor().getId(), id))throw new AccessDeniedException("You don't have access to this page");
+    public ResponseEntity<String> remove(@RequestParam long id) {
         courseService.removeById(id);
         return ResponseEntity.ok("removed");
     }
     @GetMapping("/statistic")
-    public ResponseEntity<Map<String, String>> statistic(@RequestParam long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        if(!courseService.isCourseAssignedToProfessor(userDetails.getProfessor().getId(), id))throw new AccessDeniedException("You don't have access to this page");
+    public ResponseEntity<Map<String, String>> statistic(@RequestParam long id){
         Map<String, String> statistic = new HashMap<>();
         Course course = courseService.getById(id);
 
@@ -81,22 +72,12 @@ public class CourseController {
         return ResponseEntity.ok(statistic);
     }
     @GetMapping("/get-for-select")
-    public ResponseEntity<Map<String, String>> getForSelect(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        Map<String, String> forSelect = new HashMap<>();
-        for (Course course : userDetails.getProfessor().getCourses()) {
-            forSelect.put(course.getId().toString(), course.getName());
-        }
-        return ResponseEntity.ok(forSelect);
+    public ResponseEntity<Map<String, String>> getForSelect(){
+        return ResponseEntity.ok(courseService.getForSelect());
     }
     @GetMapping("/get-for-select-by-student/{studentId}")
-    public ResponseEntity<Map<String, String>> getForSelect(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long studentId){
-        Map<String, String> forSelect = new HashMap<>();
-        Student student = studentService.getById(studentId);
-        for (Course course : userDetails.getProfessor().getCourses()) {
-            if(student.getCourses().stream().anyMatch(courseStudent -> courseStudent.getId().equals(course.getId())))
-                forSelect.put(course.getId().toString(), course.getName());
-        }
-        return ResponseEntity.ok(forSelect);
+    public ResponseEntity<Map<String, String>> getForSelect(@PathVariable Long studentId){
+        return ResponseEntity.ok(courseService.getForSelectByStudent(studentId));
     }
     @ModelAttribute
     public void activeMenuItem(Model model) {

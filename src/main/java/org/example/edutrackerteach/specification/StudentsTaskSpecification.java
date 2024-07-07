@@ -8,20 +8,21 @@ import org.example.edutrackerteach.dto.student.StudentRequestFilter;
 import org.example.edutrackerteach.dto.studentTask.StudentTaskRequestForFilter;
 import org.example.edutrackerteach.dto.studentTask.StudentTaskResponseForViewAll;
 import org.example.edutrackerteach.entity.StudentsTask;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudentsTaskSpecification implements Specification<StudentsTask> {
-    private StudentTaskRequestForFilter studentTaskRequestForFilter;
+    private final StudentTaskRequestForFilter studentTaskRequestForFilter;
 
     public StudentsTaskSpecification(StudentTaskRequestForFilter studentTaskRequestForFilter) {
         this.studentTaskRequestForFilter = studentTaskRequestForFilter;
     }
 
     @Override
-    public Predicate toPredicate(Root<StudentsTask> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+    public Predicate toPredicate(@NotNull Root<StudentsTask> root, @NotNull CriteriaQuery<?> query, @NotNull CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
         if (!studentTaskRequestForFilter.getGroupName().isEmpty()) {
             predicates.add(criteriaBuilder.like(root.get("student").get("groupName"), "%" + studentTaskRequestForFilter.getGroupName() + "%"));

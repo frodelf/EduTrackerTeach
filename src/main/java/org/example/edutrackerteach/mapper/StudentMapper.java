@@ -1,6 +1,6 @@
 package org.example.edutrackerteach.mapper;
 
-import org.example.edutrackerteach.dto.StudentResponseForAdd;
+import org.example.edutrackerteach.dto.student.StudentResponseForAdd;
 import org.example.edutrackerteach.dto.student.StudentResponseViewAll;
 import org.example.edutrackerteach.dto.student.StudentResponseViewOnePage;
 import org.example.edutrackerteach.entity.Course;

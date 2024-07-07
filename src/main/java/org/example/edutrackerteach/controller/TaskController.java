@@ -33,7 +33,7 @@ public class TaskController {
         return new ModelAndView("task/view", "task", taskService.getByIdForView(id));
     }
     @GetMapping("/get-all")
-    public ResponseEntity<Page<TaskResponseViewAll>> getAll(TaskRequestFilter taskRequestFilter){
+    public ResponseEntity<Page<TaskResponseViewAll>> getAll(@ModelAttribute @Valid TaskRequestFilter taskRequestFilter){
         return ResponseEntity.ok(taskService.getAll(taskRequestFilter));
     }
     @DeleteMapping("/delete")

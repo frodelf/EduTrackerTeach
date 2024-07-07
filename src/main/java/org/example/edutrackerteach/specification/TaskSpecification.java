@@ -6,18 +6,19 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.example.edutrackerteach.dto.task.TaskRequestFilter;
 import org.example.edutrackerteach.entity.Task;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TaskSpecification implements Specification<Task> {
-    private TaskRequestFilter taskRequestFilter;
+    private final TaskRequestFilter taskRequestFilter;
     public TaskSpecification(TaskRequestFilter taskRequestFilter) {
         this.taskRequestFilter = taskRequestFilter;
     }
     @Override
-    public Predicate toPredicate(Root<Task> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+    public Predicate toPredicate(@NotNull Root<Task> root, @NotNull CriteriaQuery<?> query, @NotNull CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
         if(taskRequestFilter.getName()!=null){
             predicates.add(criteriaBuilder.like(root.get("name"), "%" + taskRequestFilter.getName() + "%"));

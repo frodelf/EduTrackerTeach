@@ -1,5 +1,6 @@
 package org.example.edutrackerteach.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.edutrackerteach.dto.studentTask.StudentTaskRequestForFilter;
 import org.example.edutrackerteach.dto.studentTask.StudentTaskResponseForViewAll;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class StudentTaskController {
     private final StudentsTaskService studentsTaskService;
     @GetMapping("/get-all-by-task")
-    public ResponseEntity<Page<StudentTaskResponseForViewAll>> getAllStudentByTask(@ModelAttribute StudentTaskRequestForFilter studentTaskRequestForFilter) {
+    public ResponseEntity<Page<StudentTaskResponseForViewAll>> getAllStudentByTask(@ModelAttribute @Valid StudentTaskRequestForFilter studentTaskRequestForFilter) {
         return ResponseEntity.ok(studentsTaskService.getAll(studentTaskRequestForFilter));
     }
 }

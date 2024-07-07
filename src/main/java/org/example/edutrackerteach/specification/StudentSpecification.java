@@ -4,13 +4,14 @@ import jakarta.persistence.criteria.*;
 import org.example.edutrackerteach.dto.student.StudentRequestFilter;
 import org.example.edutrackerteach.entity.Course;
 import org.example.edutrackerteach.entity.Student;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudentSpecification implements Specification<Student> {
-    private StudentRequestFilter studentRequestFilter;
+    private final StudentRequestFilter studentRequestFilter;
     private List<Course> courses;
 
     public StudentSpecification(StudentRequestFilter studentRequestFilter) {
@@ -23,7 +24,7 @@ public class StudentSpecification implements Specification<Student> {
     }
 
     @Override
-    public Predicate toPredicate(Root<Student> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+    public Predicate toPredicate(@NotNull Root<Student> root, @NotNull CriteriaQuery<?> query, @NotNull CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
         if (!studentRequestFilter.getGroup().isEmpty()) {
             predicates.add(criteriaBuilder.like(root.get("groupName"), "%" + studentRequestFilter.getGroup() + "%"));

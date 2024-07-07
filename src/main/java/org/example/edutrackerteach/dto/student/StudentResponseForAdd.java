@@ -1,4 +1,4 @@
-package org.example.edutrackerteach.dto;
+package org.example.edutrackerteach.dto.student;
 
 import lombok.Data;
 

@@ -4,7 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.edutrackerteach.dto.ForSelect2Dto;
-import org.example.edutrackerteach.dto.StudentResponseForAdd;
+import org.example.edutrackerteach.dto.student.StudentResponseForAdd;
 import org.example.edutrackerteach.dto.student.StudentRequestFilter;
 import org.example.edutrackerteach.dto.student.StudentResponseViewAll;
 import org.example.edutrackerteach.dto.student.StudentResponseViewOnePage;
@@ -12,7 +12,7 @@ import org.example.edutrackerteach.entity.Course;
 import org.example.edutrackerteach.entity.Student;
 import org.example.edutrackerteach.mapper.StudentMapper;
 import org.example.edutrackerteach.repository.StudentRepository;
-import org.example.edutrackerteach.service.CourseService;
+import org.example.edutrackerteach.service.ProfessorService;
 import org.example.edutrackerteach.service.StudentService;
 import org.example.edutrackerteach.specification.StudentSpecification;
 import org.springframework.data.domain.*;
@@ -30,8 +30,9 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
-    private final CourseService courseService;
     private final StudentMapper studentMapper = new StudentMapper();
+    private final ProfessorService professorService;
+
     @Override
     @Transactional
     public Student save(Student student) {
@@ -48,7 +49,8 @@ public class StudentServiceImpl implements StudentService {
         );
     }
     @Override
-    public Page<StudentResponseViewAll> getAllByCourseList(int page, int pageSize, List<Course> courseList, StudentRequestFilter studentRequestFilter) {
+    public Page<StudentResponseViewAll> getAllByCourseList(int page, int pageSize, StudentRequestFilter studentRequestFilter) {
+        List<Course> courseList = professorService.getAuthProfessor().getCourses();
         if(!studentRequestFilter.getGroup().isBlank() || !studentRequestFilter.getFullName().isBlank() || !studentRequestFilter.getTelegram().isBlank() || !studentRequestFilter.getPhone().isBlank() || studentRequestFilter.getCourse() != null){
             Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Order.desc("id")));
             Specification<Student> spec;
@@ -78,30 +80,5 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<StudentResponseForAdd> getAllByGroupAndCourse(String group, Long courseId) {
         return studentMapper.toDtoForAddList(studentRepository.findAllByGroupName(group), courseId);
-    }
-    @Override
-    @Transactional
-    public void addToCourse(Map<String, String> students, Long courseId) {
-        Course course = courseService.getById(courseId);
-        students.forEach((studentId, value) -> {
-            Student student = getById(Long.parseLong(studentId));
-            if(Boolean.parseBoolean(value)){
-                if(student.getCourses().stream().noneMatch(courseStudent -> courseStudent.getId().equals(courseId)))
-                    course.getStudents().add(student);
-            }
-            else {
-                if(student.getCourses().stream().anyMatch(courseStudent -> courseStudent.getId().equals(courseId)))
-                    course.getStudents().removeIf(studentEl -> studentEl.getId().equals(Long.parseLong(studentId)));
-            }
-            courseService.save(course);
-        });
-    }
-    @Override
-    public void deleteFromCourse(Long studentId, Long courseId) {
-        Course course = courseService.getById(courseId);
-        Student student = getById(studentId);
-        if(student.getCourses().stream().anyMatch(courseStudent -> courseStudent.getId().equals(courseId)))
-            course.getStudents().removeIf(studentEl -> studentEl.getId().equals(studentId));
-        courseService.save(course);
     }
 }
